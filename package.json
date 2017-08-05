@@ -1,7 +1,7 @@
 {
   "name": "webtorrent-webui",
-  "version": "0.0.1",
-  "description": "A transmission base web interface for webtorrent",
+  "version": "0.0.2",
+  "description": "A transmission based web interface for webtorrent",
   "main": "index.js",
   "scripts": {
     "dev": "./index.js -v -t torrent_folder -d downloads",
@@ -36,7 +36,6 @@
     "parse-torrent": "^5.8.3",
     "restify": "^5.0.1",
     "rimraf": "^2.6.1",
-    "uuid": "^3.1.0",
     "webtorrent": "^0.98.19",
     "yargs": "^8.0.2"
   },
