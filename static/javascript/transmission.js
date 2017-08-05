@@ -799,6 +799,8 @@ Transmission.prototype = {
         var i, o, t, id, needed, callback, fields;
         var needinfo = [];
 
+        updates = updates || []
+
         for (i = 0; o = updates[i]; ++i) {
             id = o.id;
             if ((t = this._torrents[id])) {

@@ -114,7 +114,7 @@ function FileRow(torrent, depth, name, indices, even) {
         var e, root, box;
 
         root = document.createElement('li');
-        root.className = 'inspector_torrent_file_list_entry' + (even ? 'even' : 'odd');
+        root.className = 'inspector_torrent_file_list_entry';
         elements.root = root;
 
         e = document.createElement('input');
@@ -126,39 +126,6 @@ function FileRow(torrent, depth, name, indices, even) {
         });
         root.checkbox = e;
         root.appendChild(e);
-
-        e = document.createElement('div');
-        e.className = 'file-priority-radiobox';
-        box = e;
-
-        e = document.createElement('div');
-        e.className = 'low';
-        e.title = 'Low Priority';
-        $(e).click(function () {
-            firePriorityChanged(-1);
-        });
-        elements.priority_low_button = e;
-        box.appendChild(e);
-
-        e = document.createElement('div');
-        e.className = 'normal';
-        e.title = 'Normal Priority';
-        $(e).click(function () {
-            firePriorityChanged(0);
-        });
-        elements.priority_normal_button = e;
-        box.appendChild(e);
-
-        e = document.createElement('div');
-        e.title = 'High Priority';
-        e.className = 'high';
-        $(e).click(function () {
-            firePriorityChanged(1);
-        });
-        elements.priority_high_button = e;
-        box.appendChild(e);
-
-        root.appendChild(box);
 
         e = document.createElement('div');
         e.className = "inspector_torrent_file_list_entry_name";
