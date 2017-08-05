@@ -1,0 +1,52 @@
+{
+  "name": "webtorrent-webui",
+  "version": "0.0.1",
+  "description": "A transmission base web interface for webtorrent",
+  "main": "index.js",
+  "scripts": {
+    "dev": "./index.js -v -t torrent_folder -d downloads",
+    "watch": "node_modules/nodemon/bin/nodemon.js -i torrent_folder/state.json --exec 'npm run dev'",
+    "debug": "node --inspect-brk index.js -v -t torrent_folder -d downloads",
+    "watch-debug": "node_modules/nodemon/bin/nodemon.js -i torrent_folder/state.json --exec 'npm run debug'",
+    "lint": "node_modules/eslint/bin/eslint.js *.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pldubouilh/webtorrent-webui.git"
+  },
+  "keywords": [
+    "webtorrent",
+    "bittorrent",
+    "remote",
+    "torrent"
+  ],
+  "author": "pldubouilh",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/pldubouilh/webtorrent-webui/issues"
+  },
+  "bin": {
+    "webtorrent-webui": "./index.js"
+  },
+  "engines": {
+    "node": ">=8"
+  },
+  "homepage": "https://github.com/pldubouilh/webtorrent-webui#readme",
+  "dependencies": {
+    "parse-torrent": "^5.8.3",
+    "restify": "^5.0.1",
+    "rimraf": "^2.6.1",
+    "uuid": "^3.1.0",
+    "webtorrent": "^0.98.19",
+    "yargs": "^8.0.2"
+  },
+  "devDependencies": {
+    "eslint": "^3.19.0",
+    "eslint-config-airbnb": "^15.1.0",
+    "eslint-config-airbnb-base": "^11.3.1",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-node": "^5.1.1",
+    "eslint-plugin-promise": "^3.5.0",
+    "nodemon": "^1.11.0"
+  }
+}

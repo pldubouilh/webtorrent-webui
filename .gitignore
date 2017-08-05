@@ -1,0 +1,6 @@
+node_modules
+downloads/*
+!downloads/.gitkeepme
+torrent_folder/*
+!torrent_folder/.gitkeepme
+package-lock.json
