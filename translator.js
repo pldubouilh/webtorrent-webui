@@ -1,7 +1,7 @@
 const types = require('./types')
 
 function getStats() {
-  const dummyStats = JSON.parse(types.sessionStats)
+  const dummyStats = JSON.parse(types.getSessionStats())
 
   // dummyStats['cumulative-stats'].downloadedBytes = state.dl
   // dummyStats['cumulative-stats'].uploadedBytes = state.up
@@ -9,14 +9,14 @@ function getStats() {
 }
 
 function wtToTransmissionTorrentDetail(wt, state) {
-  const t = types.torrentDetail
+  const t = types.getTorrentDetail()
 
   t.hashString = wt.infoHash
   t.id = wt.infoHash
 
   // If no metadata available
   if (!wt.name || !wt.files) {
-    return Object.assign({}, t)
+    return t
   }
 
   t.id             = wt.infoHash
@@ -48,16 +48,29 @@ function wtToTransmissionTorrentDetail(wt, state) {
     name: file.name,
   }))
 
-  // Can't use that yet
-  // const trackers = wt.announce || []
-  // t.trackerStats = trackers.map( (tracker, i) => {})
+  const trackers = wt.announce || []
+  t.trackerStats = trackers.map( trackerName => {
+    const tracker = types.getTrackerDetail()
+    tracker.announce = trackerName
+    tracker.host = trackerName
+    return tracker
+  })
 
-  t.trackerStats = []
-  return Object.assign({}, t)
+  const wires = wt.wires || []
+  t.peers = wires.map( wire => {
+    const peer = types.getPeer()
+    peer.rateToClient = wire.downloadSpeed()
+    peer.rateToPeer   = wire.uploadSpeed()
+    peer.address      = wire.remoteAddress
+    peer.progress     = wire.isSeeder ? 1 : 0.5
+    return peer
+  }).sort( (a, b) => (a.rateToClient < b.rateToClient ? 1 : -1) )
+
+  return t
 }
 
 function wtToTransmissionTorrent(wt, state) {
-  const t = types.torrent
+  const t = types.getTorrent()
 
   t.status             = state.paused[wt.infoHash] ? 0 : (wt.progress === 1 ? 6 : 4) // See types for details
   t.id                 = wt.infoHash
@@ -70,7 +83,7 @@ function wtToTransmissionTorrent(wt, state) {
     t.percentDone = 0
     t.metadataPercentComplete = 0
     t.name = wt.name || wt.infoHash
-    return Object.assign({}, t)
+    return t
   }
 
   // We have metadata
@@ -83,7 +96,7 @@ function wtToTransmissionTorrent(wt, state) {
   t.percentDone  = wt.progress
   t.rateDownload = state.paused[wt.infoHash] ? 0 : wt.downloadSpeed
   t.rateUpload   = state.paused[wt.infoHash] ? 0 : wt.uploadSpeed
-  t.uploadRatio  = Math.floor(state.up[wt.infoHash] / wt.downloaded) || 0
+  t.uploadRatio  = Math.max(Math.floor(state.up[wt.infoHash] / wt.downloaded), 0)
   t.uploadedEver = state.up[wt.infoHash] || wt.uploaded
 
   // sizeWhenDone - leftUntilDone
@@ -92,19 +105,7 @@ function wtToTransmissionTorrent(wt, state) {
   t.sizeWhenDone  = total
   t.leftUntilDone = Math.floor(total - wt.downloaded)
 
-  // Can't use that yet
-  // const trackers = wt.announce || []
-  // t.trackers = trackers.map( (tracker, i) => {
-  //    return {
-  //     id: i,
-  //     tier: 0,
-  //     announce: tracker,
-  //     scrape: tracker,
-  //   }
-  // })
-  t.trackers = []
-
-  return Object.assign({}, t) // Fancy JSON.parse( JSON.stringify(t) ) ...
+  return t
 }
 
 module.exports = {

@@ -62,6 +62,9 @@ function checkInterval() {
 
   if (verb) console.log( '-------------------' )
 
+  // Reset peerlist
+  Object.keys(state.torrentDetail).forEach( infoHash => state.torrentDetail[infoHash].peers = [])
+
   client.torrents.forEach( t => {
     state.torrents[t.infoHash] = translate.wtToTransmissionTorrent(t, state)
     state.torrentDetail[t.infoHash] = translate.wtToTransmissionTorrentDetail(t, state)
@@ -71,8 +74,8 @@ function checkInterval() {
 
     // Keep track of what's been downloaded in a backlog
     state.dl[t.infoHash]  = t.downloaded
-    state.up[t.infoHash] =  t.uploaded - (upBacklog[t.infoHash] || 0) + (state.up[t.infoHash] || 0) // eslint-disable-line
-    upBacklog[t.infoHash] =  t.uploaded
+    state.up[t.infoHash]  = t.uploaded - (upBacklog[t.infoHash] || 0) + (state.up[t.infoHash] || 0) // eslint-disable-line
+    upBacklog[t.infoHash] = t.uploaded
 
     if (verb) {
       console.log(`${t.name.slice(0, 10)} is complete: ${t.progress}, up: ${toSize(state.up[t.infoHash])}, dl: ${toSize(t.downloaded)}`)
@@ -89,7 +92,7 @@ function checkInterval() {
 
 function returnState() {
   checkInterval()
-  return Object.assign({}, state)
+  return state
 }
 
 function returnRemoved() {

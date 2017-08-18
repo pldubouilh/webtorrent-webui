@@ -27,7 +27,7 @@ function parse(q) {
 
   switch (q.method) {
     case 'session-get':
-      parsed = JSON.parse(types.sessionGet) // Return dummy session data
+      parsed = JSON.parse(types.getSessionGet()) // Return dummy session data
       break
 
     case 'session-stats':
