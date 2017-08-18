@@ -36,9 +36,9 @@ function start() {
     } catch (e) { die("Can't create torrent folder", 1) }
   }
 
-  if (!fs.existsSync(tFolder)) {
+  if (!fs.existsSync(dlFolder)) {
     try {
-      fs.mkdirSync(tFolder)
+      fs.mkdirSync(dlFolder)
     } catch (e) { die("Can't create download folder", 1) }
   }
 

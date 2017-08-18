@@ -25,7 +25,7 @@ function wtToTransmissionTorrentDetail(wt, state) {
   t.haveValid      = wt.downloaded
   t.pieceSize      = wt.pieceLength
   t.pieceCount     = wt.pieces ? wt.pieces.length : -1
-  t.downloadedEver = wt.info   ? wt.info.length   : -1
+  t.downloadedEver = wt.info   ? wt.downloaded    : -1
 
   t.dateCreated = wt.created ? wt.created.getTime() : 9999999999
 
