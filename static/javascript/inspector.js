@@ -649,7 +649,6 @@ function Inspector(controller) {
                     '<th class="upCol">Up</th>',
                     '<th class="downCol">Down</th>',
                     '<th class="percentCol">%</th>',
-                    '<th class="statusCol">Status</th>',
                     '<th class="addressCol">Address</th>',
                     '<th class="clientCol">Client</th>',
                     '</tr>');
@@ -660,7 +659,6 @@ function Inspector(controller) {
                         '<td>', (peer.rateToPeer ? fmt.speedBps(peer.rateToPeer) : ''), '</td>',
                         '<td>', (peer.rateToClient ? fmt.speedBps(peer.rateToClient) : ''), '</td>',
                         '<td class="percentCol">', Math.floor(peer.progress * 100), '%', '</td>',
-                        '<td>', fmt.peerStatus(peer.flagStr), '</td>',
                         '<td>', sanitizeText(peer.address), '</td>',
                         '<td class="clientCol">', sanitizeText(peer.clientName), '</td>',
                         '</tr>');

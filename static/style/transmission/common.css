@@ -535,6 +535,7 @@ div#torrent_inspector {
   div#torrent_inspector #inspector_header {
     margin-top: 8px; }
     div#torrent_inspector #inspector_header #torrent_inspector_name {
+      padding-top: 15px;
       font-weight: bold;
       font-size: large; }
   div#torrent_inspector ul.tier_list {
@@ -614,6 +615,7 @@ div#torrent_inspector {
 /* Peers Inspector Tab */
 #inspector_peers_list {
   padding: 0 0 0 0;
+  padding-top: 10px;
   margin: 0 0 0 0;
   text-align: left;
   cursor: default;
@@ -632,9 +634,9 @@ table.peer_list {
   table.peer_list .encryptedCol {
     width: 16px; }
   table.peer_list .upCol {
-    width: 70px; }
+    width: 50px; }
   table.peer_list .downCol {
-    width: 70px; }
+    width: 50px; }
   table.peer_list .percentCol {
     width: 30px;
     padding-right: 5px;
@@ -643,7 +645,7 @@ table.peer_list {
     width: 40px;
     padding-right: 5px; }
   table.peer_list .addressCol {
-    width: 180px; }
+    width: 100px; }
   table.peer_list .clientCol {
     white-space: nowrap;
     overflow: hidden;
