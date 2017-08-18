@@ -1,23 +1,6 @@
 const types = require('./types')
 const wt = require('./handlerWebtorrent')
 
-
-function getTorrentDiff( torrentId, fields ) {
-  const t = types.torrentDetail
-  t.peers.push( types.peer )
-  t.trackerStats.push( types.trackerDetail )
-
-  const filteredTorrent = {}
-  fields.forEach( item => filteredTorrent[item] = t[item] )
-  filteredTorrent.peers = []
-  filteredTorrent.trackerStats = []
-
-  return {
-    torrents: [ filteredTorrent ],
-    removed: [],
-  }
-}
-
 function getTorrent( torrentId ) {
   return {
     torrents: [ wt.returnState().torrentDetail[torrentId] ],
@@ -40,7 +23,7 @@ function getActive() {
 
 // Main parser
 function parse(q) {
-  let parsed = {} // eslint-disable-line
+  let parsed = {}
 
   switch (q.method) {
     case 'session-get':
@@ -62,9 +45,9 @@ function parse(q) {
 
       // Get one specific torrent
       } else if (q.arguments.ids[0]) {
-        // ... in some sort of diff view
+        // ... in some sort of diff view - return all for the moment
         if ( q.arguments.fields.length < 15 ) {
-          parsed = getTorrentDiff( q.arguments.ids[0], q.arguments.fields )
+          parsed = getTorrent(q.arguments.ids[0])
 
         // Full stuff
         } else {
@@ -82,11 +65,11 @@ function parse(q) {
       break
 
     case 'torrent-start':
-      q.arguments.ids.forEach( id => wt.resumeTorrent(id) )
+      q.arguments.ids.forEach(wt.resumeTorrent)
       break
 
     case 'torrent-stop':
-      q.arguments.ids.forEach( id => wt.pauseTorrent(id) )
+      q.arguments.ids.forEach(wt.pauseTorrent)
       break
 
     case 'torrent-add':
