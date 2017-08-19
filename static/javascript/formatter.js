@@ -33,12 +33,12 @@ Transmission.fmt = (function () {
          *   Format a percentage to a string
          */
         percentString: function (x) {
-            if (x < 10.0) {
+            if (!x) {
+                return 0;
+            } else if (x < 10.0) {
                 return x.toTruncFixed(2);
             } else if (x < 100.0) {
                 return x.toTruncFixed(1);
-            } else {
-                return x.toTruncFixed(0);
             }
         },
 
