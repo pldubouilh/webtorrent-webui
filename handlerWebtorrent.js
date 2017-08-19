@@ -25,7 +25,7 @@ state.torrents = {}
 state.torrentDetail = {}
 state.torrentFiles = {}
 
-let removed = []
+const removed = []
 let checkIntervalToken
 
 function toSize(bytes) {
@@ -58,7 +58,7 @@ function storeState() {
 
 function checkInterval() {
   clearTimeout(checkIntervalToken)
-  checkIntervalToken = setTimeout( checkInterval, 5*1000 )
+  checkIntervalToken = setTimeout( checkInterval, 2*1000 )
 
   if (verb) console.log( '-------------------' )
 
@@ -91,14 +91,11 @@ function checkInterval() {
 
 
 function returnState() {
-  checkInterval()
   return state
 }
 
 function returnRemoved() {
-  const toReturn = removed
-  removed = []
-  return toReturn
+  return removed.splice(0, removed.length)
 }
 
 function pauseTorrent(infoHash) {
@@ -168,15 +165,24 @@ function addNew(args) {
   fs.writeFileSync(state.torrentFiles[pt.infoHash], pt.torrentFile, 'binary')
 }
 
+function rmTorrentFromState(infoHash) {
+  // Keep stats and remove other info
+  state.dl.done += state.dl[infoHash]
+  state.up.done += state.up[infoHash]
+
+  delete state.up[infoHash]
+  delete state.dl[infoHash]
+  delete state.paused[infoHash]
+  delete state.torrentFiles[infoHash]
+  delete state.torrents[infoHash]
+  delete state.torrentDetail[infoHash]
+}
+
 function remove(args) {
   args.ids.forEach( infoHash => {
     if (!state.paused[infoHash]) {
       client.remove(infoHash)
     }
-
-    // Keep stats and remove other info
-    state.dl.done += state.dl[infoHash]
-    state.up.done += state.up[infoHash]
 
     // Keep tab of infohash in the removed array
     removed.push( infoHash )
@@ -189,14 +195,8 @@ function remove(args) {
       filesToRm.push( downloadFolder + state.torrents[infoHash].name)
     }
 
+    rmTorrentFromState(infoHash)
     filesToRm.forEach(file => rimraf(file, err => console.log(err || 'File deleted')))
-
-    delete state.up[infoHash]
-    delete state.dl[infoHash]
-    delete state.paused[infoHash]
-    delete state.torrentFiles[infoHash]
-    delete state.torrents[infoHash]
-    delete state.torrentDetail[infoHash]
   })
 }
 
@@ -250,6 +250,8 @@ function start(tFolder, dlFolder, v) {
 
     files = files.filter( file => file.includes('.torrent') )
 
+    const torrentFound = []
+
     files.forEach( file => {
       let pt
       try {
@@ -259,6 +261,7 @@ function start(tFolder, dlFolder, v) {
       }
 
       console.log(`- Adding ${file}`)
+      torrentFound.push(pt.infoHash)
 
       state.torrentFiles[pt.infoHash] = torrentFolder + file
 
@@ -277,6 +280,9 @@ function start(tFolder, dlFolder, v) {
         }
       })
     })
+
+    // Scan for deleted torrents that might still be in the state file
+    Object.keys(state.torrentFiles).forEach( t =>  torrentFound.includes(t) || rmTorrentFromState(t) )
   })
 }
 
