@@ -57,14 +57,19 @@ function wtToTransmissionTorrentDetail(wt, state) {
   })
 
   const wires = wt.wires || []
-  t.peers = wires.map( wire => {
+  t.peers = []
+  wires.forEach( wire => {
+    if (!wire.remoteAddress) return
+
     const peer = types.getPeer()
     peer.rateToClient = wire.downloadSpeed()
     peer.rateToPeer   = wire.uploadSpeed()
     peer.address      = wire.remoteAddress
     peer.progress     = wire.isSeeder ? 1 : 0.5
-    return peer
-  }).sort( (a, b) => (a.rateToClient < b.rateToClient ? 1 : -1) )
+    t.peers.push(peer)
+  })
+
+  t.peers = t.peers.sort( (a, b) => (a.rateToClient < b.rateToClient ? 1 : -1) )
 
   return t
 }
