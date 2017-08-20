@@ -122,7 +122,9 @@ function deselectFiles(torrent) {
 
   // BUG: Need to deselect all first - https://github.com/webtorrent/webtorrent/issues/164
   torrent.deselect(0, torrent.pieces.length - 1, false)
-  torrent.files.forEach( (file, i) => (unwanted.includes(i) ? file.deselect() : file.select()) )
+  torrent.files
+    .sort((a, b) => (a.path > b.path ? 1 : -1))
+    .forEach( (file, i) => (unwanted.includes(i) ? file.deselect() : file.select()) )
 }
 
 function addNew(args) {
@@ -187,10 +189,8 @@ function remove(args) {
     // Keep tab of infohash in the removed array
     removed.push( infoHash )
 
-    // Delete torrent and magnet file
+    // Delete torrent file and local data if needed
     const filesToRm = [ state.torrentFiles[infoHash] ]
-
-    // Delete local data if needed
     if ( args['delete-local-data'] ) {
       filesToRm.push( downloadFolder + state.torrents[infoHash].name)
     }

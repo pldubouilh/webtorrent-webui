@@ -11,10 +11,10 @@ const peer = {
   address: '22.22.22.22',
   clientIsChoked: true,
   clientIsInterested: false,
-  clientName: 'Webtorrent 0.99',
+  clientName: 'Torrent',
   flagStr: 'TE',
   isDownloadingFrom: false,
-  isEncrypted: true,
+  isEncrypted: false,
   isIncoming: false,
   isUTP: true,
   isUploadingTo: false,
@@ -64,7 +64,7 @@ const trackerDetail = {
 
 const torrent = {
   addedDate: 1479579099,
-  downloadDir: '/root/downloads',
+  downloadDir: '/',
   error: 0,
   errorString: '',
   eta: -1,
@@ -99,27 +99,19 @@ const torrentDetail = {
   corruptEver: 0,
   creator: '',
   dateCreated: 0,
-  desiredAvailable: 0,
-  downloadedEver: 832212,
-  fileStats: [{
-    bytesCompleted: 398534,
-    priority: 0,
-    wanted: true,
-  }],
-  files: [{
-    bytesCompleted: 398534,
-    length: 398534,
-    name: 'Book, leaves and stuff',
-  }],
-  hashString: '1220123e74d01506447d548b7c2982ff47af82420',
+  desiredAvailable: 1,
+  downloadedEver: 0,
+  fileStats: [], // { bytesCompleted, priority, wanted }
+  files: [], // { bytesCompleted, length, name }
+  hashString: '',
   haveUnchecked: 0,
-  haveValid: 832212,
+  haveValid: 0,
   id: 1,
   isPrivate: false,
   peers: [],
-  pieceCount: 51,
-  pieceSize: 16384,
-  startDate: 1499273528,
+  pieceCount: 0,
+  pieceSize: 0,
+  startDate: 0,
   trackerStats: [],
 }
 

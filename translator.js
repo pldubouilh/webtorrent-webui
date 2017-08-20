@@ -27,26 +27,22 @@ function wtToTransmissionTorrentDetail(wt, state) {
   t.pieceCount     = wt.pieces ? wt.pieces.length : -1
   t.downloadedEver = wt.info   ? wt.downloaded    : -1
 
-  t.dateCreated = wt.created ? wt.created.getTime() : 9999999999
-
-  t.fileStats = []
-  t.files = []
-
-  // Torrent state
   const unwantedFiles = state.unwanted[wt.infoHash] || []
+  const files = wt.files ? wt.files.sort((a, b) => (a.path > b.path ? 1 : -1)) : []
 
-  const files = wt.files || []
-  t.fileStats = files.map((file, i) => ({
-    bytesCompleted: file.downloaded,
-    priority: 0,
-    wanted: (file.progress >= 1) ? true : !unwantedFiles.includes(i),
-  }))
+  files.forEach((file, i) => {
+    t.files.push({
+      bytesCompleted: file.downloaded,
+      length: file.length,
+      name: file.name,
+    })
 
-  t.files = files.map(file => ({
-    bytesCompleted: file.downloaded,
-    length: file.length,
-    name: file.name,
-  }))
+    t.fileStats.push({
+      bytesCompleted: file.downloaded,
+      priority: 0,
+      wanted: (file.progress >= 1) ? true : !unwantedFiles.includes(i),
+    })
+  })
 
   const trackers = wt.announce || []
   t.trackerStats = trackers.map( trackerName => {
@@ -82,19 +78,18 @@ function wtToTransmissionTorrent(wt, state) {
   t.peersConnected     = wt.numPeers
   t.peersGettingFromUs = wt.numPeers
   t.peersSendingToUs   = wt.numPeers
+  t.name               = wt.name || wt.infoHash
 
   // If no metadata available
   if (!wt.name || !wt.files) {
     t.percentDone = 0
     t.metadataPercentComplete = 0
-    t.name = wt.name || wt.infoHash
     return t
   }
 
   // We have metadata
   t.metadataPercentComplete = 1
 
-  t.name         = wt.name
   t.isFinished   = wt.progress === 1
   t.eta          = wt.timeRemaining ? Math.floor(wt.timeRemaining / 1000) : 9999999999999
   t.downloadDir  = wt.path
@@ -104,7 +99,6 @@ function wtToTransmissionTorrent(wt, state) {
   t.uploadRatio  = Math.max(Math.floor(state.up[wt.infoHash] / wt.downloaded), 0)
   t.uploadedEver = state.up[wt.infoHash] || wt.uploaded
 
-  // sizeWhenDone - leftUntilDone
   const total     = Math.floor(wt.downloaded / wt.progress)
   t.totalSize     = total
   t.sizeWhenDone  = total
