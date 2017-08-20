@@ -4,9 +4,9 @@
   "description": "A transmission based web interface for webtorrent",
   "main": "index.js",
   "scripts": {
-    "dev": "./index.js -v -t torrent_folder -d downloads",
+    "dev": "node index.js -v",
     "watch": "node_modules/nodemon/bin/nodemon.js -i torrent_folder/state.json --exec 'npm run dev'",
-    "debug": "node --inspect-brk index.js -v -t torrent_folder -d downloads",
+    "debug": "node --inspect-brk index.js -v",
     "watch-debug": "node_modules/nodemon/bin/nodemon.js -i torrent_folder/state.json --exec 'npm run debug'",
     "lint": "node_modules/eslint/bin/eslint.js *.js"
   },
