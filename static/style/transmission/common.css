@@ -566,8 +566,10 @@ div#torrent_inspector {
       color: #666; }
     div#torrent_inspector ul.tier_list th {
       text-align: right; }
+  div#torrent_inspector .inspector_group {
+    margin-top: 10px;}
   div#torrent_inspector li.inspector_tracker_entry {
-    padding: 3px 0 3px 2px;
+    padding: 6px 0 6px 2px;
     display: block; }
     div#torrent_inspector li.inspector_tracker_entry.odd {
       background-color: #EEEEEE; }
@@ -657,6 +659,9 @@ tr.inspector_peer_entry div.encrypted-peer-cell {
   width: 16px;
   height: 16px;
   background: transparent url("images/lock_icon.png") no-repeat; }
+tr.inspector_peer_entry {
+  height: 18px;
+  font-size: 1.1em;}
 tr.inspector_peer_entry.odd {
   background-color: #EEEEEE; }
 

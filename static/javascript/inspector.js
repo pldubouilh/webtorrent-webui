@@ -770,9 +770,9 @@ function Inspector(controller) {
 
                         tier = tracker.tier;
 
-                        html.push('<div class="inspector_group_label">',
-                            'Tier ', tier + 1, '</div>',
-                            '<ul class="tier_list">');
+                        // html.push('<div class="inspector_group_label">',
+                        //     'Tier ', tier + 1, '</div>',
+                        //     '<ul class="tier_list">');
                     }
 
                     // Display construction
@@ -781,16 +781,16 @@ function Inspector(controller) {
                     lastScrapeStatusHash = lastScrapeStatus(tracker);
                     parity = (j % 2) ? 'odd' : 'even';
                     html.push('<li class="inspector_tracker_entry ', parity, '"><div class="tracker_host" title="', sanitizeText(tracker.announce), '">',
-                        sanitizeText(tracker.host || tracker.announce), '</div>',
-                        '<div class="tracker_activity">',
-                        '<div>', lastAnnounceStatusHash['label'], ': ', lastAnnounceStatusHash['value'], '</div>',
-                        '<div>', announceState, '</div>',
-                        '<div>', lastScrapeStatusHash['label'], ': ', lastScrapeStatusHash['value'], '</div>',
-                        '</div><table class="tracker_stats">',
-                        '<tr><th>Seeders:</th><td>', (tracker.seederCount > -1 ? tracker.seederCount : na), '</td></tr>',
-                        '<tr><th>Leechers:</th><td>', (tracker.leecherCount > -1 ? tracker.leecherCount : na), '</td></tr>',
-                        '<tr><th>Downloads:</th><td>', (tracker.downloadCount > -1 ? tracker.downloadCount : na), '</td></tr>',
-                        '</table></li>');
+                        sanitizeText(tracker.host || tracker.announce), '</div>')//,
+                        // '<div class="tracker_activity">',
+                        // '<div>', lastAnnounceStatusHash['label'], ': ', lastAnnounceStatusHash['value'], '</div>',
+                        // '<div>', announceState, '</div>',
+                        // '<div>', lastScrapeStatusHash['label'], ': ', lastScrapeStatusHash['value'], '</div>',
+                        // '</div><table class="tracker_stats">',
+                        // '<tr><th>Seeders:</th><td>', (tracker.seederCount > -1 ? tracker.seederCount : na), '</td></tr>',
+                        // '<tr><th>Leechers:</th><td>', (tracker.leecherCount > -1 ? tracker.leecherCount : na), '</td></tr>',
+                        // '<tr><th>Downloads:</th><td>', (tracker.downloadCount > -1 ? tracker.downloadCount : na), '</td></tr>',
+                        // '</table></li>');
                 }
                 if (tier !== -1) { // close last tier
                     html.push('</ul></div>');
