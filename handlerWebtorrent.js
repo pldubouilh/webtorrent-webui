@@ -82,10 +82,12 @@ function checkInterval() {
     }
   })
 
-  const up = Object.values(state.up).reduce( (el, prev) => el + prev )
-  const dl = Object.values(state.dl).reduce( (el, prev) => el + prev )
+  if (verb) {
+    const up = Object.values(state.up).reduce((el, prev) => el + prev)
+    const dl = Object.values(state.dl).reduce((el, prev) => el + prev)
+    console.log(`Total dl: ${toSize(dl)}, up: ${toSize(up)}`)
+  }
 
-  if (verb) console.log(`Total dl: ${toSize(dl)}, up: ${toSize(up)}`)
   storeState()
 }
 

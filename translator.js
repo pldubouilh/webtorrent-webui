@@ -1,11 +1,12 @@
 const types = require('./types')
 
-function getStats() {
-  const dummyStats = JSON.parse(types.getSessionStats())
+function getStats(state) {
+  const stats = types.getSessionStats()
 
-  // dummyStats['cumulative-stats'].downloadedBytes = state.dl
-  // dummyStats['cumulative-stats'].uploadedBytes = state.up
-  return dummyStats
+  stats['cumulative-stats'].downloadedBytes = Object.values(state.dl).reduce((el, prev) => el + prev)
+  stats['cumulative-stats'].uploadedBytes   = Object.values(state.up).reduce((el, prev) => el + prev)
+
+  return stats
 }
 
 function wtToTransmissionTorrentDetail(wt, state) {

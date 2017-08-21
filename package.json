@@ -33,6 +33,7 @@
   },
   "homepage": "https://github.com/pldubouilh/webtorrent-webui#readme",
   "dependencies": {
+    "clone-deep": "^1.0.0",
     "parse-torrent": "^5.8.3",
     "restify": "^5.0.1",
     "rimraf": "^2.6.1",

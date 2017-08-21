@@ -537,6 +537,7 @@ div#torrent_inspector {
   div#torrent_inspector #inspector_header {
     margin-top: 8px; }
     div#torrent_inspector #inspector_header #torrent_inspector_name {
+      overflow: hidden;
       padding-top: 15px;
       font-weight: bold;
       font-size: large; }
