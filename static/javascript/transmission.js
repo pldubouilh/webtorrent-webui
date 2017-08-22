@@ -78,11 +78,11 @@ Transmission.prototype = {
             $(document).bind('keydown', $.proxy(this.keyDown, this));
             $(document).bind('keyup', $.proxy(this.keyUp, this));
             $('#torrent_container').click($.proxy(this.deselectAll, this));
-            $('#torrent_container').bind('dragover', $.proxy(this.dragenter, this));
-            $('#torrent_container').bind('dragenter', $.proxy(this.dragenter, this));
-            $('#torrent_container').bind('drop', $.proxy(this.drop, this));
+            $('body').bind('dragover', $.proxy(this.dragover, this));
+            $('body').bind('drop', $.proxy(this.drop, this));
+            $('#torrent_container, #torrent_inspector').bind('dragenter', $.proxy(this.dragenter, this));
+            $('#drop-grid').bind('dragleave', $.proxy(this.dragleave, this));
             $('#inspector_link').click($.proxy(this.toggleInspector, this));
-
             this.setupSearchBox();
             this.createContextMenu();
         };
@@ -547,52 +547,48 @@ Transmission.prototype = {
         }
     },
 
+    dragover: function(ev) {
+        ev.preventDefault();
+        ev.stopPropagation();
+    },
+
+    enableDrag: function() {
+        document.getElementById('drop-grid').style.display = 'flex'
+        document.getElementById('drop-grid').style.pointerEvents = 'auto'
+        document.getElementById('torrent_inspector').style.pointerEvents = 'none'
+        document.getElementById('torrent_container').style.pointerEvents = 'none'
+    },
+
+    disableDrag: function() {
+        document.getElementById('drop-grid').style.display = 'none'
+        document.getElementById('drop-grid').style.pointerEvents = 'none'
+        document.getElementById('torrent_inspector').style.pointerEvents = 'auto'
+        document.getElementById('torrent_container').style.pointerEvents = 'auto'
+    },
+
     dragenter: function (ev) {
-        if (ev.dataTransfer && ev.dataTransfer.types) {
-            var types = ["text/uri-list", "text/plain"];
-            for (var i = 0; i < types.length; ++i) {
-                // it would be better to look at the links here;
-                // sadly, with Firefox, trying would throw.
-                if (ev.dataTransfer.types.contains(types[i])) {
-                    ev.stopPropagation();
-                    ev.preventDefault();
-                    ev.dropEffect = "copy";
-                    return false;
-                }
-            }
-        } else if (ev.dataTransfer) {
-            ev.dataTransfer.dropEffect = "none";
-        }
-        return true;
+        ev.preventDefault();
+        ev.stopPropagation();
+        ev.dataTransfer.dropEffect = 'copy';
+        this.enableDrag()
+    },
+
+    dragleave: function (ev) {
+        ev.stopPropagation();
+        ev.preventDefault();
+        this.disableDrag()
     },
 
     drop: function (ev) {
-        var i, uri;
-        var uris = null;
-        var types = ["text/uri-list", "text/plain"];
-        var paused = this.shouldAddedTorrentsStart();
-
-        if (!ev.dataTransfer || !ev.dataTransfer.types) {
-            return true;
-        };
-
-        for (i = 0; !uris && i < types.length; ++i) {
-            if (ev.dataTransfer.types.contains(types[i])) {
-                uris = ev.dataTransfer.getData(types[i]).split("\n");
-            };
-        };
-
-        for (i = 0; uri = uris[i]; ++i) {
-            if (/^#/.test(uri)) { // lines which start with "#" are comments
-                continue;
-            };
-            if (/^[a-z-]+:/i.test(uri)) { // close enough to a url
-                this.remote.addTorrentByUrl(uri, paused);
-            };
-        };
-
         ev.preventDefault();
-        return false;
+        ev.stopPropagation();
+        this.disableDrag()
+
+        for (var i = 0; i < ev.dataTransfer.files.length; i++) {
+            if (ev.dataTransfer.files[i].type.indexOf('x-bittorrent') > -1) {
+                this.pushTorrent(ev.dataTransfer.files[i]);
+            }
+        }
     },
 
     hideUploadDialog: function () {
@@ -940,6 +936,26 @@ Transmission.prototype = {
 
     shouldAddedTorrentsStart: function () {
         return this.prefsDialog.shouldAddedTorrentsStart();
+    },
+
+    pushTorrent: function (file) {
+        var remote = this.remote
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            var o = {
+                method: 'torrent-add',
+                arguments: {
+                    'paused': false,
+                    'download-dir': '',
+                    'metainfo': window.btoa(e.target.result)
+                }
+            };
+            remote.sendRequest(o, function (response) {
+                if (response.result != 'success')
+                    alert('Error adding "' + file.name + '": ' + response.result);
+            });
+        };
+        reader.readAsBinaryString(file);
     },
 
     /*

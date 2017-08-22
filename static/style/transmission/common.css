@@ -169,6 +169,25 @@ div#torrent_container {
   overflow: auto;
   -webkit-overflow-scrolling: touch; }
 
+div#drop-grid {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    position: fixed;
+    top: 71px;
+    bottom: 22px;
+    right: 0px;
+    left: 0px;
+    z-index: 999;
+    border: 5px dashed #bbb;
+    margin: 0px;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 4em;
+    background-color: white;
+    opacity: 0.8;
+    backdrop-filter: grayscale(100%);}
+
 ul.torrent_list {
   width: 100%;
   margin: 0;
