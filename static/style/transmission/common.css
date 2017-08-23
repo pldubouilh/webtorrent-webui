@@ -179,7 +179,7 @@ div#drop-grid {
     right: 0px;
     left: 0px;
     z-index: 999;
-    border: 5px dashed #bbb;
+    border: 5px dashed;
     margin: 0px;
     border-radius: 5px;
     text-align: center;

@@ -550,6 +550,28 @@ Transmission.prototype = {
     dragover: function(ev) {
         ev.preventDefault();
         ev.stopPropagation();
+
+        var allClear = true
+        var grid = document.getElementById('drop-grid')
+        var files = ev.dataTransfer.items
+
+        for (var i = 0; i < files.length; i++) {
+            if (files[i].type.indexOf('x-bittorrent') === -1) {
+                allClear = false
+                break
+            }
+        }
+
+        if (allClear) {
+            grid.style.borderColor = 'green'
+            grid.style.color = 'green'
+            grid.textContent = 'Adding ' + files.length.toString() + ' file' + (files.length > 1 ? 's' : '')
+        } else {
+            grid.style.borderColor = 'crimson'
+            grid.style.color = 'crimson'
+            grid.textContent = 'Not a torrent file :('
+        }
+
     },
 
     enableDrag: function() {
@@ -562,8 +584,10 @@ Transmission.prototype = {
     disableDrag: function() {
         document.getElementById('drop-grid').style.display = 'none'
         document.getElementById('drop-grid').style.pointerEvents = 'none'
+        document.getElementById('drop-grid').style.textContent = ''
         document.getElementById('torrent_inspector').style.pointerEvents = 'auto'
         document.getElementById('torrent_container').style.pointerEvents = 'auto'
+        
     },
 
     dragenter: function (ev) {
