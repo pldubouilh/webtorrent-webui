@@ -86,7 +86,7 @@ function parse(q) {
 
   return {
     arguments: parsed,
-    result: 'success',
+    result: wt.getSuccess(),
   }
 }
 

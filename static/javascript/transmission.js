@@ -77,6 +77,7 @@ Transmission.prototype = {
         if (!isMobileDevice) {
             $(document).bind('keydown', $.proxy(this.keyDown, this));
             $(document).bind('keyup', $.proxy(this.keyUp, this));
+            document.body.onpaste = this.onpaste.bind(this)
             $('#torrent_container').click($.proxy(this.deselectAll, this));
             $('body').bind('dragover', $.proxy(this.dragover, this));
             $('body').bind('drop', $.proxy(this.drop, this));
@@ -547,6 +548,17 @@ Transmission.prototype = {
         }
     },
 
+    onpaste: function(ev) {
+        var item = ev.clipboardData.items[0]
+        var that = this
+        if (item.kind !== 'string' ) {
+            return console.log('Input not a string')
+        }
+        item.getAsString(function(s) {
+            that.pushTorrentLink(s)
+        })
+    },
+
     dragover: function(ev) {
         ev.preventDefault();
         ev.stopPropagation();
@@ -610,7 +622,7 @@ Transmission.prototype = {
 
         for (var i = 0; i < ev.dataTransfer.files.length; i++) {
             if (ev.dataTransfer.files[i].type.indexOf('x-bittorrent') > -1) {
-                this.pushTorrent(ev.dataTransfer.files[i]);
+                this.pushTorrentFile(ev.dataTransfer.files[i]);
             }
         }
     },
@@ -962,7 +974,22 @@ Transmission.prototype = {
         return this.prefsDialog.shouldAddedTorrentsStart();
     },
 
-    pushTorrent: function (file) {
+    pushTorrentLink: function (url, that) {
+        var o = {
+            method: 'torrent-add',
+            arguments: {
+                'paused': false,
+                'download-dir': '',
+                'filename': url
+            }
+        }
+        this.remote.sendRequest(o, function (response) {
+            if (response.result != 'success')
+                alert(response.result);
+        });
+    },
+
+    pushTorrentFile: function (file) {
         var remote = this.remote
         var reader = new FileReader();
         reader.onload = function (e) {
@@ -976,7 +1003,7 @@ Transmission.prototype = {
             };
             remote.sendRequest(o, function (response) {
                 if (response.result != 'success')
-                    alert('Error adding "' + file.name + '": ' + response.result);
+                    alert(response.result);
             });
         };
         reader.readAsBinaryString(file);

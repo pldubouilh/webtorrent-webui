@@ -11,6 +11,7 @@ let downloadFolder
 let webtorrentOpts
 let verb
 let pathStateFile
+let success
 
 const upBacklog = {}
 
@@ -33,6 +34,12 @@ function toSize(bytes) {
   if (bytes === 0) return '0 B'
   const i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)))
   return Math.round(bytes / (1024**i), 2) + ' ' + sizes[i]
+}
+
+function getSuccess() {
+  const successCp = success
+  success = 'success'
+  return successCp
 }
 
 function getState() {
@@ -152,11 +159,13 @@ function addNew(args) {
   try {
     pt = parseTorrent(torrent)
   } catch (error) {
-    return console.log("Can't parse torrent received")
+    success = "Can't parse torrent received"
+    return console.log(success)
   }
 
   if ( Object.keys(state.dl).includes(pt.infoHash) ) {
-    return console.log("Can't add a torrent we already have")
+    success = "Can't add a torrent we already have"
+    return console.log(success)
   }
 
   client.add(pt, webtorrentOpts, cb)
@@ -292,6 +301,7 @@ module.exports = {
   client,
   start,
   getStats,
+  getSuccess,
   returnState,
   returnRemoved,
   addNew,
