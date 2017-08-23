@@ -1123,3 +1123,22 @@ iframe#torrent_upload_frame {
 #footer_super_menu {
   font-size: 1em;
   z-index: 99; }
+
+/* Hide toolbar on desktop */
+@media (min-width: 700px) {
+  #toolbar {
+    display: none;
+  }
+  #drop-grid, #torrent_container, #torrent_inspector{
+    top: 30px !important;
+  }
+}
+
+@media (max-width: 700px) {
+  #toolbar {
+    display: block;
+  }
+  #drop-grid, #torrent_container, #torrent_inspector{
+    top: 71px !important;
+  }
+}
