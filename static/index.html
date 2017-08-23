@@ -35,6 +35,7 @@
 		<script type="text/javascript" src="./javascript/dialog.js"></script>
 		<script type="text/javascript" src="./javascript/formatter.js"></script>
 		<script type="text/javascript" src="./javascript/notifications.js"></script>
+		<script type="text/javascript" src="./javascript/clipboard.min.js"></script>
 		<script type="text/javascript" src="./javascript/main.js"></script>
 		<title>Transmission Web Interface</title>
 	</head>
@@ -422,6 +423,7 @@
 			<li>---</li>
 			<li data-command="select_all">Select All</li>
 			<li data-command="deselect_all">Deselect All</li>
+			<li id="clip" class="clip" data-command="cp_magnet" data-clipboard-text="1">Copy magnet link to clipboard</li>
 		</ul>
 
 		<iframe name="torrent_upload_frame" id="torrent_upload_frame" src="about:blank" ></iframe>

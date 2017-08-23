@@ -19,6 +19,8 @@ Transmission.prototype = {
     initialize: function () {
         var e;
 
+        new Clipboard('.clip')
+
         // Initialize the helper classes
         this.remote = new TransmissionRemote(this);
         this.inspector = new Inspector(this, this.remote);
@@ -227,6 +229,9 @@ Transmission.prototype = {
             },
             deselect_all: function () {
                 tr.deselectAll();
+            },
+            cp_magnet: function () {
+                tr.cpMagnet();
             }
         };
 
@@ -397,6 +402,11 @@ Transmission.prototype = {
         $(this.elements.torrent_list).children('.selected').removeClass('selected');
         this.callSelectionChangedSoon();
         delete this._last_torrent_clicked;
+    },
+    cpMagnet: function () {
+        var t = this.getSelectedTorrents()[0].fields
+        var m = 'magnet:?xt=urn:btih:' + t.id + '&dn=' + t.name.replace(/\ /g, '+');
+        document.getElementById('clip').dataset.clipboardText = m
     },
 
     indexOfLastTorrent: function () {
