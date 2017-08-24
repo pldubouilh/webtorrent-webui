@@ -162,7 +162,7 @@ div#torrent_container {
   position: fixed;
   top: 71px;
   bottom: 22px;
-  right: 0px;
+  width: 100%;
   left: 0px;
   padding: 0px;
   margin: 0px;
@@ -187,6 +187,10 @@ div#drop-grid {
     background-color: white;
     opacity: 0.8;
     backdrop-filter: grayscale(100%);}
+
+div#inspector-info-hash {
+  overflow: hidden;
+}
 
 ul.torrent_list {
   width: 100%;
@@ -388,10 +392,10 @@ div#torrent_inspector {
   overflow: auto;
   -webkit-overflow-scrolling: touch;
   text-align: left;
-  padding: 15px;
+  padding: 1%;
   top: 68px;
   position: fixed;
-  width: 430px;
+  width: 38%;
   z-index: 5;
   border-left: 1px solid #888;
   bottom: 22px;

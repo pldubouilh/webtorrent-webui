@@ -1478,8 +1478,7 @@ Transmission.prototype = {
         if (isMobileDevice) {
             $('body').toggleClass('inspector_showing', visible);
         } else {
-            var w = visible ? $('#torrent_inspector').outerWidth() + 1 + 'px' : '0px';
-            $('#torrent_container')[0].style.right = w;
+            $('#torrent_container')[0].style.width = visible ? '60%' : '100%'
         }
     },
 
