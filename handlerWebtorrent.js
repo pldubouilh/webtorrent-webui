@@ -73,6 +73,8 @@ function checkInterval() {
   Object.keys(state.torrentDetail).forEach( infoHash => state.torrentDetail[infoHash].peers = [])
 
   client.torrents.forEach( t => {
+    if (!t.infoHash) return
+
     state.torrents[t.infoHash] = translate.wtToTransmissionTorrent(t, state)
     state.torrentDetail[t.infoHash] = translate.wtToTransmissionTorrentDetail(t, state)
 
