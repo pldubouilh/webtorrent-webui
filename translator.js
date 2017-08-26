@@ -9,7 +9,7 @@ function getStats(state) {
   return stats
 }
 
-function wtToTransmissionTorrentDetail(wt, state) {
+function wtToTransmissionTorrentDetail(wt, state, isAdded) {
   const t = types.getTorrentDetail()
 
   t.hashString = wt.infoHash
@@ -71,10 +71,11 @@ function wtToTransmissionTorrentDetail(wt, state) {
   return t
 }
 
-function wtToTransmissionTorrent(wt, state) {
+function wtToTransmissionTorrent(wt, state, isAdded) {
   const t = types.getTorrent()
 
-  t.status             = state.paused[wt.infoHash] ? 0 : (wt.progress === 1 ? 6 : 4) // See types for details
+  t.status             = !isAdded ? 2 : (state.paused[wt.infoHash] ? 0 : (wt.progress === 1 ? 6 : 4)) // 6 seeding, 4 dl, 0 paused, 2 verif-local-data
+  t.recheckProgress    = !isAdded ? wt.progress : 1
   t.id                 = wt.infoHash
   t.peersConnected     = wt.numPeers
   t.peersGettingFromUs = wt.numPeers
@@ -90,7 +91,6 @@ function wtToTransmissionTorrent(wt, state) {
 
   // We have metadata
   t.metadataPercentComplete = 1
-
   t.isFinished   = wt.progress === 1
   t.eta          = wt.timeRemaining ? Math.floor(wt.timeRemaining / 1000) : 9999999999999
   t.downloadDir  = wt.path

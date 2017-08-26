@@ -6,7 +6,7 @@ module.exports = {
     "space-in-parens": 0,
     "array-bracket-spacing": 0,
     "no-nested-ternary": 0,
-    "max-len": ["error", { "code": 120, "ignoreStrings": true, "ignoreTemplateLiterals": true }],
+    "max-len": ["error", { "code": 120, "ignoreStrings": true, "ignoreComments": true, "ignoreTemplateLiterals": true }],
     "no-return-assign": 0,
     "prefer-template": 0,
     "no-unneeded-ternary": [2, { defaultAssignment: false }],

@@ -15,6 +15,7 @@ let success
 
 const upBacklog = {}
 
+const isAdded = {}
 let state = {}
 state.paused = {}
 state.up = {}
@@ -75,8 +76,8 @@ function checkInterval() {
   client.torrents.forEach( t => {
     if (!t.infoHash) return
 
-    state.torrents[t.infoHash] = translate.wtToTransmissionTorrent(t, state)
-    state.torrentDetail[t.infoHash] = translate.wtToTransmissionTorrentDetail(t, state)
+    state.torrents[t.infoHash] = translate.wtToTransmissionTorrent(t, state, isAdded[t.infoHash])
+    state.torrentDetail[t.infoHash] = translate.wtToTransmissionTorrentDetail(t, state, isAdded[t.infoHash])
 
     // No metadata yet
     if (!t.name) return
@@ -174,6 +175,7 @@ function addNew(args) {
 
   // Pause if needed
   state.paused[pt.infoHash] = !!args.paused
+  isAdded[pt.infoHash] = true
 
   // Write torrent file
   state.torrentFiles[pt.infoHash] = torrentFolder + (pt.name || pt.infoHash) + '.torrent'
@@ -283,6 +285,7 @@ function start(tFolder, dlFolder, v) {
 
       client.add(pt, webtorrentOpts, t => {
         console.log(`+ Added ${t.name}`)
+        isAdded[t.infoHash] = true
 
         // Deselect previous deselected
         deselectFiles(t)
