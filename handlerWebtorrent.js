@@ -121,7 +121,7 @@ function resumeTorrent(infoHash) {
   if (!state.paused[infoHash]) return
   state.paused[infoHash] = false
   checkInterval()
-  client.add( state.torrentFiles[infoHash] )
+  client.add( state.torrentFiles[infoHash], webtorrentOpts )
 }
 
 function deselectFiles(torrent) {
