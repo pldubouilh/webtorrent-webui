@@ -4,7 +4,7 @@ const parseTorrent = require('parse-torrent')
 const rimraf = require('rimraf')
 const translate = require('./translator')
 
-const client = new Webtorrent()
+let client = new Webtorrent()
 
 let torrentFolder
 let downloadFolder
@@ -121,7 +121,11 @@ function resumeTorrent(infoHash) {
   if (!state.paused[infoHash]) return
   state.paused[infoHash] = false
   checkInterval()
-  client.add( state.torrentFiles[infoHash], webtorrentOpts )
+
+  isAdded[infoHash] = false
+  client.add( state.torrentFiles[infoHash], webtorrentOpts, () => {
+    isAdded[infoHash] = true
+  })
 }
 
 function deselectFiles(torrent) {
@@ -139,22 +143,24 @@ function deselectFiles(torrent) {
     .forEach( (file, i) => (unwanted.includes(i) ? file.deselect() : file.select()) )
 }
 
+function writeTorrentfile(infoHash, name, torrentFile) {
+  // Overwrite torrent.magnet file for the proper torrent when we have it
+  if (state.torrentFiles[infoHash].includes('.torrent.magnet')) {
+    rimraf(state.torrentFiles[infoHash], err => console.log(err || 'File deleted'))
+
+    state.torrentFiles[infoHash] = torrentFolder + name + '.torrent'
+    fs.writeFileSync(state.torrentFiles[infoHash], torrentFile, 'binary')
+  }
+}
+
 function addNew(args) {
   let pt
 
   function cb(t) {
     console.log(`+ Added ${t.name}`)
+    isAdded[pt.infoHash] = true
 
-    // We have meta - rewrite torrent file
-    fs.unlinkSync(state.torrentFiles[t.infoHash])
-    state.torrentFiles[t.infoHash] = torrentFolder + (t.name) + '.torrent'
-    fs.writeFileSync(state.torrentFiles[t.infoHash], t.torrentFile,  'binary')
-
-    // Immediatly stop torrent when we have the metadata
-    if (state.paused[pt.infoHash]) {
-      checkInterval()
-      client.remove(t)
-    }
+    writeTorrentfile(t.infoHash, t.name, t.torrentFile)
   }
 
   // Magnets are in filename, Torrent files in metainfo
@@ -171,15 +177,26 @@ function addNew(args) {
     return console.log(success)
   }
 
-  client.add(pt, webtorrentOpts, cb)
-
-  // Pause if needed
-  state.paused[pt.infoHash] = !!args.paused
-  isAdded[pt.infoHash] = true
+  isAdded[pt.infoHash] = false
 
   // Write torrent file
-  state.torrentFiles[pt.infoHash] = torrentFolder + (pt.name || pt.infoHash) + '.torrent'
-  fs.writeFileSync(state.torrentFiles[pt.infoHash], pt.torrentFile, 'binary')
+  const path = torrentFolder + (pt.name || pt.infoHash) + (pt.torrentFile ? '.torrent' : '.torrent.magnet')
+  state.torrentFiles[pt.infoHash] = path
+  fs.writeFileSync(path, pt.torrentFile || args.filename, pt.torrentFile ? 'binary' : 'utf8')
+
+  client.add(pt, webtorrentOpts, cb)
+
+  // Detect stalled torrent
+  setTimeout(() => {
+    if (!isAdded[pt.infoHash]) {
+      console.log('\n\n Detected stalled torrent, try rebooting the app. \n\n')
+      // console.log('Trying to reboot stalled torrent')
+      // client.destroy(() => {
+      //   client = new Webtorrent()
+      //   readLocalTorrents() // eslint-disable-line
+      // })
+    }
+  }, 60*1000)
 }
 
 function rmTorrentFromState(infoHash) {
@@ -243,34 +260,21 @@ function getStats() {
   return translate.getStats(state)
 }
 
-// Loop over all the torrents in ./torrents
-function start(tFolder, dlFolder, v) {
-  torrentFolder = tFolder
-  downloadFolder = dlFolder
-  verb = v
-  webtorrentOpts = {
-    path: dlFolder,
-  }
-
-  pathStateFile = torrentFolder + 'state.json'
-
-  console.log( `Webtorrent starting\n  torrent folder : ${torrentFolder}\n  download folder : ${downloadFolder}\n`)
-  getState()
-  checkInterval()
-
+function readLocalTorrents() {
   fs.readdir(torrentFolder, (err, files) => {
     if (err || !files) {
       return console.log(err, files)
     }
 
-    files = files.filter( file => file.includes('.torrent') )
+    files = files.filter(file => file.includes('.torrent'))
 
     const torrentFound = []
 
-    files.forEach( file => {
+    files.forEach(file => {
       let pt
       try {
-        pt = parseTorrent(fs.readFileSync(torrentFolder + file))
+        const fileRead = fs.readFileSync(torrentFolder + file, file.includes('.torrent.magnet') ? 'utf8' : null)
+        pt = parseTorrent(fileRead)
       } catch (error) {
         return console.log('- Invalid torrent at ' + torrentFolder + file)
       }
@@ -287,14 +291,31 @@ function start(tFolder, dlFolder, v) {
         console.log(`+ Added ${t.name}`)
         isAdded[t.infoHash] = true
 
-        // Deselect previous deselected
+        // Write torrent file and select/deselect files
+        writeTorrentfile(t.infoHash, t.name, t.torrentFile)
         deselectFiles(t)
       })
     })
 
     // Scan for deleted torrents that might still be in the state file
-    Object.keys(state.torrentFiles).forEach( t =>  torrentFound.includes(t) || rmTorrentFromState(t) )
+    Object.keys(state.torrentFiles).forEach(t => torrentFound.includes(t) || rmTorrentFromState(t))
   })
+}
+
+function start(tFolder, dlFolder, v) {
+  torrentFolder = tFolder
+  downloadFolder = dlFolder
+  verb = v
+  webtorrentOpts = {
+    path: dlFolder,
+  }
+
+  pathStateFile = torrentFolder + 'state.json'
+
+  console.log( `Webtorrent starting\n  torrent folder : ${torrentFolder}\n  download folder : ${downloadFolder}\n`)
+  getState()
+  checkInterval()
+  readLocalTorrents()
 }
 
 module.exports = {
