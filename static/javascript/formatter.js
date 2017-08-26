@@ -39,6 +39,8 @@ Transmission.fmt = (function () {
                 return x.toTruncFixed(2);
             } else if (x < 100.0) {
                 return x.toTruncFixed(1);
+            } else if (x >= 100) {
+                return '100'
             }
         },
 

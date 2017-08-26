@@ -33,7 +33,7 @@ function wtToTransmissionTorrentDetail(wt, state) {
 
   files.forEach((file, i) => {
     t.files.push({
-      bytesCompleted: file.downloaded,
+      bytesCompleted: Math.min(file.length, file.downloaded), // download can be higher than the actual length
       length: file.length,
       name: file.name,
     })
@@ -97,8 +97,9 @@ function wtToTransmissionTorrent(wt, state) {
   t.percentDone  = wt.progress
   t.rateDownload = state.paused[wt.infoHash] ? 0 : wt.downloadSpeed
   t.rateUpload   = state.paused[wt.infoHash] ? 0 : wt.uploadSpeed
-  t.uploadRatio  = Math.max(Math.floor(state.up[wt.infoHash] / wt.downloaded), 0)
+
   t.uploadedEver = state.up[wt.infoHash] || wt.uploaded
+  t.uploadRatio = t.uploadedEver / (wt.downloaded || 1)
 
   const total     = Math.floor(wt.downloaded / wt.progress)
   t.totalSize     = total
