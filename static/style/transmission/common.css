@@ -660,20 +660,19 @@ table.peer_list {
   clear: both;
   table-layout: fixed; }
   table.peer_list .encryptedCol {
-    width: 16px; }
+    width: 0px; }
   table.peer_list .upCol {
-    width: 50px; }
+    width: 60px; }
   table.peer_list .downCol {
-    width: 50px; }
+    width: 60px; }
   table.peer_list .percentCol {
-    width: 30px;
-    padding-right: 5px;
+    width: 35px;
+    padding-right: 10px;
     text-align: right; }
   table.peer_list .statusCol {
     width: 40px;
     padding-right: 5px; }
-  table.peer_list .addressCol {
-    width: 100px; }
+  table.peer_list .addressCol { }
   table.peer_list .clientCol {
     white-space: nowrap;
     overflow: hidden;

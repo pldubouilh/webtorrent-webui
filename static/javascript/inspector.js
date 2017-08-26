@@ -655,11 +655,11 @@ function Inspector(controller) {
                 for (i = 0; peer = peers[i]; ++i) {
                     parity = (i % 2) ? 'odd' : 'even';
                     html.push('<tr class="inspector_peer_entry ', parity, '">',
-                        '<td>', (peer.isEncrypted ? '<div class="encrypted-peer-cell" title="Encrypted Connection">' : '<div class="unencrypted-peer-cell">'), '</div>', '</td>',
-                        '<td>', (peer.rateToPeer ? fmt.speedBps(peer.rateToPeer) : ''), '</td>',
-                        '<td>', (peer.rateToClient ? fmt.speedBps(peer.rateToClient) : ''), '</td>',
+                        '<td class="encryptedCol">', (peer.isEncrypted ? '<div class="encrypted-peer-cell" title="Encrypted Connection">' : '<div class="unencrypted-peer-cell">'), '</div>', '</td>',
+                        '<td class="upCol">', (peer.rateToPeer ? fmt.speedBps(peer.rateToPeer) : ''), '</td>',
+                        '<td class="downCol">', (peer.rateToClient ? fmt.speedBps(peer.rateToClient) : ''), '</td>',
                         '<td class="percentCol">', Math.floor(peer.progress * 100), '%', '</td>',
-                        '<td>', sanitizeText(peer.address), '</td>',
+                        '<td class="addressCol">', sanitizeText(peer.address), '</td>',
                         '<td class="clientCol">', sanitizeText(peer.clientName), '</td>',
                         '</tr>');
                 }
