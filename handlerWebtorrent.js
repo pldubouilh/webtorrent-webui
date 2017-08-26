@@ -289,11 +289,6 @@ function start(tFolder, dlFolder, v) {
 
         // Deselect previous deselected
         deselectFiles(t)
-
-        // If we had magnet uri, write torrent file
-        if (!t.name || !t.files) {
-          fs.writeFile(state.torrentFiles[t.infoHash], t.torrentFile, 'binary')
-        }
       })
     })
 
