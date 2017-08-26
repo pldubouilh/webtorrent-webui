@@ -405,7 +405,12 @@ Transmission.prototype = {
     },
     cpMagnet: function () {
         var t = this.getSelectedTorrents()[0].fields
-        var m = 'magnet:?xt=urn:btih:' + t.id + '&dn=' + t.name.replace(/\ /g, '+');
+        var trackers = []
+        for (var i = 0; i < t.trackers.length; i++) {
+            trackers.push('&tr=' + escape(t.trackers[i].announce).replace(/\//g, '%2F') )
+        }
+
+        var m = 'magnet:?xt=urn:btih:' + t.id + '&dn=' + t.name.replace(/\ /g, '+') + trackers.join('')
         document.getElementById('clip').dataset.clipboardText = m
     },
 
