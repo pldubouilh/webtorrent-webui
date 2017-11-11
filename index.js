@@ -6,25 +6,25 @@ const fs = require('fs')
 const os = require('os')
 const path = require('path')
 
-const help = 'Webtorrent Web UI\n\
-  -h  displays this message\n\
-  -t  sets the torrent folder         - default ~/.torrent_folder\n\
-  -d  sets the download folder        - default ~/Downloads\n\
-  -v  gives a console status msg/sec  - default disabled \n\
-  -l  sets the host to listen to      - default 127.0.0.1\n\
-  -p  sets the port to listen to      - default 9081'
+const help = `Webtorrent Web UI
+   -h  displays this message
+   -t  sets the torrent folder         - default ~/.torrent_folder
+   -d  sets the download folder        - default ~/Downloads
+   -v  gives a console status msg/sec  - default disabled
+   -l  sets the host to listen to      - default 127.0.0.1
+   -p  sets the port to listen to      - default 9081`
 
-function die(msg, code) {
+function die (msg, code) {
   console.log(msg)
   process.exit(code)
 }
 
-function start() {
-  let tFolder  = argv.t || (os.homedir() + '/.torrent_folder/')
+function start () {
+  let tFolder = argv.t || (os.homedir() + '/.torrent_folder/')
   let dlFolder = argv.d || (os.homedir() + '/Downloads/')
-  const host   = argv.l || '127.0.0.1'
-  const port   = argv.p || 9081
-  const verb   = !!argv.v
+  const host = argv.l || '127.0.0.1'
+  const port = argv.p || 9081
+  const verb = !!argv.v
 
   // Check input
   tFolder = tFolder.endsWith('/') ? tFolder : tFolder + '/'
@@ -50,7 +50,7 @@ function start() {
   server.get(/\/?.*/, restify.plugins.serveStatic({
     directory: path.join(__dirname, '/static'),
     default: 'index.html',
-    match: /^((?!index.js).)*$/,
+    match: /^((?!index.js).)*$/
   }))
 
   // Main endpoint for transmission ui

@@ -13,20 +13,20 @@ const sessionStats = {
     filesAdded: 0,
     secondsActive: 0,
     sessionCount: 0,
-    uploadedBytes: 0,
+    uploadedBytes: 0
   },
   'current-stats': {
     downloadedBytes: 0,
     filesAdded: 0,
     secondsActive: 0,
     sessionCount: 0,
-    uploadedBytes: 0,
-  },
+    uploadedBytes: 0
+  }
 }
 
 const recentlyActive = {
   removed: [],
-  torrents: [], // torrents are torrents from below, minus: addedDate, totalSize, name
+  torrents: [] // torrents are torrents from below, minus: addedDate, totalSize, name
 }
 
 const peer = {
@@ -45,14 +45,14 @@ const peer = {
   port: 22222,
   progress: 0,
   rateToClient: 0,
-  rateToPeer: 0,
+  rateToPeer: 0
 }
 
 const tracker = {
   id: 0,
   tier: 0,
   announce: 'udp://super.tracker.org:1234',
-  scrape: 'udp://super.tracker.org:1234',
+  scrape: 'udp://super.tracker.org:1234'
 }
 
 const trackerDetail = {
@@ -81,7 +81,7 @@ const trackerDetail = {
   scrape: 'udp://super.tracker.org:1234',
   scrapeState: 1,
   seederCount: 8,
-  tier: 0,
+  tier: 0
 }
 
 const torrent = {
@@ -112,7 +112,7 @@ const torrent = {
   uploadedEver: 0,
   webseedsSendingToUs: 0,
   name: 'Books',
-  trackers: [],
+  trackers: []
 }
 
 const torrentDetail = {
@@ -134,7 +134,7 @@ const torrentDetail = {
   pieceCount: 0,
   pieceSize: 0,
   startDate: 0,
-  trackerStats: [],
+  trackerStats: []
 }
 
 module.exports = {
@@ -145,5 +145,5 @@ module.exports = {
   getTorrent: () => clone(torrent),
   getTracker: () => clone(tracker),
   getTorrentDetail: () => clone(torrentDetail),
-  getTrackerDetail: () => clone(trackerDetail),
+  getTrackerDetail: () => clone(trackerDetail)
 }
