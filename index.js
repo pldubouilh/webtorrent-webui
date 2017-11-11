@@ -3,9 +3,9 @@ const argv = require('yargs').argv
 const fs = require('fs')
 const os = require('os')
 const path = require('path')
-var bodyParser = require('body-parser')
+const bodyParser = require('body-parser')
 const ecstatic = require('ecstatic')
-const parser = require('./parser')
+const parser = require('./lib/parser')
 
 const express = require('express')
 const app = express()
