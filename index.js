@@ -1,10 +1,14 @@
 #!/usr/bin/env node
 const argv = require('yargs').argv
-const restify = require('restify')
-const parser = require('./parser')
 const fs = require('fs')
 const os = require('os')
 const path = require('path')
+var bodyParser = require('body-parser')
+const ecstatic = require('ecstatic')
+const parser = require('./parser')
+
+const express = require('express')
+const app = express()
 
 const help = `Webtorrent Web UI
    -h  displays this message
@@ -42,28 +46,24 @@ function start () {
     } catch (e) { die("Can't create download folder", 1) }
   }
 
-  const server = restify.createServer()
-  server.use(restify.plugins.acceptParser(server.acceptable))
-  server.use(restify.plugins.bodyParser())
-
-  // Serve static folder
-  server.get(/\/?.*/, restify.plugins.serveStatic({
-    directory: path.join(__dirname, '/static'),
-    default: 'index.html',
-    match: /^((?!index.js).)*$/
+  app.get(/files/, ecstatic({
+    root: dlFolder,
+    baseDir: '/files',
+    showdir: true
   }))
 
-  // Main endpoint for transmission ui
-  server.post('rpc', (req, res, next) => {
-    req.query = JSON.parse(req.body.toString('utf8'), 0, 2)
-    res.json(parser.parse(req.query))
-    return next()
+  app.get(/\//, express.static(path.join(__dirname, '/static')))
+
+  var jsonParser = bodyParser.json()
+  app.post('/rpc/', jsonParser, (req, res, next) => {
+    res.json(parser.parse(req.body))
   })
 
-  console.log(`Web server starting on http://${host}:${port}`)
-
-  parser.start(tFolder, dlFolder, verb)
-  server.listen(parseInt(port), host)
+  app.listen(parseInt(port), host, (err) => {
+    if (err) die(err, 1)
+    parser.start(tFolder, dlFolder, verb)
+    console.log(`Starting at http://${host || '127.0.0.1'}:${port}`)
+  })
 }
 
 if (argv.h || argv.help) {

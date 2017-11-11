@@ -4,11 +4,11 @@
   "description": "A transmission based web interface for webtorrent",
   "main": "index.js",
   "scripts": {
-    "dev": "node index.js -v",
+    "dev": "node index.js -v -p 9998",
     "watch": "node_modules/nodemon/bin/nodemon.js -i torrent_folder/state.json --exec 'npm run dev'",
-    "debug": "node --inspect-brk index.js -v",
+    "debug": "node --inspect-brk index.js -v -p 9998",
     "watch-debug": "node_modules/nodemon/bin/nodemon.js -i torrent_folder/state.json --exec 'npm run debug'",
-    "lint": "node_modules/eslint/bin/eslint.js *.js"
+    "lint": "standard index.js handlerWebtorrent.js parser.js translator.js types.js"
   },
   "repository": {
     "type": "git",
@@ -33,7 +33,10 @@
   },
   "homepage": "https://github.com/pldubouilh/webtorrent-webui#readme",
   "dependencies": {
+    "body-parser": "^1.18.2",
     "clone-deep": "^1.0.0",
+    "ecstatic": "^3.0.0",
+    "express": "^4.16.2",
     "parse-torrent": "^5.8.3",
     "restify": "^5.0.1",
     "rimraf": "^2.6.1",
