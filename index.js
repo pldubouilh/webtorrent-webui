@@ -16,7 +16,8 @@ const help = `Webtorrent Web UI
    -d  sets the download folder        - default ~/Downloads
    -v  gives a console status msg/sec  - default disabled
    -l  sets the host to listen to      - default 127.0.0.1
-   -p  sets the port to listen to      - default 9081`
+   -p  sets the port to listen to      - default 9081
+   --hybrid  use hybrid webtorrent     - default false`
 
 function die (msg, code) {
   console.log(msg)
@@ -29,6 +30,7 @@ function start () {
   const host = argv.l || '127.0.0.1'
   const port = argv.p || 9081
   const verb = !!argv.v
+  const hybrid = !!argv.hybrid
 
   // Check input
   tFolder = tFolder.endsWith('/') ? tFolder : tFolder + '/'
@@ -61,8 +63,9 @@ function start () {
 
   app.listen(parseInt(port), host, (err) => {
     if (err) die(err, 1)
-    parser.start(tFolder, dlFolder, verb)
+    parser.start(tFolder, dlFolder, verb, hybrid)
     console.log(`Starting at http://${host || '127.0.0.1'}:${port}`)
+    if (hybrid) console.log('Using hybrid webtorrent')
   })
 }
 
