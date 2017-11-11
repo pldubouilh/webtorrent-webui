@@ -979,6 +979,25 @@ div.torrent_footer {
     /* Opera 11.10+ */
     background-position: center;
     background-repeat: no-repeat; }
+   div.torrent_footer #file-explorer {
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    background-color: #dddddd;
+    background-image: url("images/folder.png");
+    /* fallback */
+    background-image: url("images/folder.png"), -webkit-gradient(linear, left top, left bottom, from(white), to(#bbbbbb));
+    /* Saf4+, Chrome */
+    background-image: url("images/folder.png"), -webkit-linear-gradient(top, white, #bbbbbb);
+    /* Chrome 10+, Saf5.1+ */
+    background-image: url("images/folder.png"), -moz-linear-gradient(top, white, #bbbbbb);
+    /* FF3.6+ */
+    background-image: url("images/folder.png"), -ms-linear-gradient(top, white, #bbbbbb);
+    /* IE10 */
+    background-image: url("images/folder.png"), -o-linear-gradient(top, white, #bbbbbb);
+    /* Opera 11.10+ */
+    background-position: center;
+    background-repeat: no-repeat; }
+
     div.torrent_footer #compact-button:active, div.torrent_footer #compact-button.selected {
       background-color: #e6e6ff;
       background-image: url("images/compact.png");

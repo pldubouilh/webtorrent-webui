@@ -1,30 +1,34 @@
 #!/usr/bin/env node
 const argv = require('yargs').argv
-const restify = require('restify')
-const parser = require('./parser')
 const fs = require('fs')
 const os = require('os')
 const path = require('path')
+const bodyParser = require('body-parser')
+const ecstatic = require('ecstatic')
+const parser = require('./lib/parser')
 
-const help = 'Webtorrent Web UI\n\
-  -h  displays this message\n\
-  -t  sets the torrent folder         - default ~/.torrent_folder\n\
-  -d  sets the download folder        - default ~/Downloads\n\
-  -v  gives a console status msg/sec  - default disabled \n\
-  -l  sets the host to listen to      - default 127.0.0.1\n\
-  -p  sets the port to listen to      - default 9081'
+const express = require('express')
+const app = express()
 
-function die(msg, code) {
+const help = `Webtorrent Web UI
+   -h  displays this message
+   -t  sets the torrent folder         - default ~/.torrent_folder
+   -d  sets the download folder        - default ~/Downloads
+   -v  gives a console status msg/sec  - default disabled
+   -l  sets the host to listen to      - default 127.0.0.1
+   -p  sets the port to listen to      - default 9081`
+
+function die (msg, code) {
   console.log(msg)
   process.exit(code)
 }
 
-function start() {
-  let tFolder  = argv.t || (os.homedir() + '/.torrent_folder/')
+function start () {
+  let tFolder = argv.t || (os.homedir() + '/.torrent_folder/')
   let dlFolder = argv.d || (os.homedir() + '/Downloads/')
-  const host   = argv.l || '127.0.0.1'
-  const port   = argv.p || 9081
-  const verb   = !!argv.v
+  const host = argv.l || '127.0.0.1'
+  const port = argv.p || 9081
+  const verb = !!argv.v
 
   // Check input
   tFolder = tFolder.endsWith('/') ? tFolder : tFolder + '/'
@@ -42,28 +46,24 @@ function start() {
     } catch (e) { die("Can't create download folder", 1) }
   }
 
-  const server = restify.createServer()
-  server.use(restify.plugins.acceptParser(server.acceptable))
-  server.use(restify.plugins.bodyParser())
-
-  // Serve static folder
-  server.get(/\/?.*/, restify.plugins.serveStatic({
-    directory: path.join(__dirname, '/static'),
-    default: 'index.html',
-    match: /^((?!index.js).)*$/,
+  app.get(/files/, ecstatic({
+    root: dlFolder,
+    baseDir: '/files',
+    showdir: true
   }))
 
-  // Main endpoint for transmission ui
-  server.post('rpc', (req, res, next) => {
-    req.query = JSON.parse(req.body.toString('utf8'), 0, 2)
-    res.json(parser.parse(req.query))
-    return next()
+  app.get(/\//, express.static(path.join(__dirname, '/static')))
+
+  var jsonParser = bodyParser.json()
+  app.post('/rpc/', jsonParser, (req, res, next) => {
+    res.json(parser.parse(req.body))
   })
 
-  console.log(`Web server starting on http://${host}:${port}`)
-
-  parser.start(tFolder, dlFolder, verb)
-  server.listen(parseInt(port), host)
+  app.listen(parseInt(port), host, (err) => {
+    if (err) die(err, 1)
+    parser.start(tFolder, dlFolder, verb)
+    console.log(`Starting at http://${host || '127.0.0.1'}:${port}`)
+  })
 }
 
 if (argv.h || argv.help) {

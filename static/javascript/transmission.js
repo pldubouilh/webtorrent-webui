@@ -60,6 +60,10 @@ Transmission.prototype = {
 
         $('#turtle-button').click($.proxy(this.toggleTurtleClicked, this));
         $('#compact-button').click($.proxy(this.toggleCompactClicked, this));
+        $('#file-explorer').click(() => {
+            const url = location.href + 'files'
+            window.open(url)
+        });
 
         // tell jQuery to copy the dataTransfer property from events over if it exists
         jQuery.event.props.push("dataTransfer");
