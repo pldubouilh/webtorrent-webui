@@ -25,6 +25,6 @@ Webtorrent Web UI
 Todo:
   - [x] Modernize UI: drag'n'drop torrents, paste magnetlinks...
   - [ ] Rename things properly
-  - [x] Option to spin webserver to download files
+  - [x] Spin file server with downloaded files
   - [ ] Use sass, revert hardcoded CSS
   - [ ] Password protect (maybe?)
