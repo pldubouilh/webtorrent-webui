@@ -61,7 +61,7 @@ Transmission.prototype = {
         $('#turtle-button').click($.proxy(this.toggleTurtleClicked, this));
         $('#compact-button').click($.proxy(this.toggleCompactClicked, this));
         $('#file-explorer').click(() => {
-            const url = location.href + 'files'
+            const url = location.origin + '/files'
             window.open(url)
         });
 

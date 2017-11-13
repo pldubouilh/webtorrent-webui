@@ -1,6 +1,6 @@
 {
   "name": "webtorrent-webui",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "A transmission based web interface for webtorrent",
   "main": "index.js",
   "scripts": {
