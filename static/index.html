@@ -5,7 +5,7 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=8,IE=9,IE=10"><!-- ticket #4555 --> 
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
 		<meta name="apple-mobile-web-app-capable" content="yes" />
-		<link href="./images/favicon.ico" rel="icon" />
+		<link href="./images/favicon.ico?v=1" rel="icon" />
 		<link href="./images/favicon.png" rel="shortcut icon" />
 		<link rel="apple-touch-icon" href="./images/webclip-icon.png"/>
 		<script type="text/javascript" src="./javascript/jquery/jquery.min.js"></script>
@@ -37,7 +37,7 @@
 		<script type="text/javascript" src="./javascript/notifications.js"></script>
 		<script type="text/javascript" src="./javascript/clipboard.min.js"></script>
 		<script type="text/javascript" src="./javascript/main.js"></script>
-		<title>Transmission Web Interface</title>
+		<title>Webtorrent Web UI</title>
 	</head>
 	<body id="transmission_body">
 
@@ -259,9 +259,9 @@
 
 		<div class="ui-helper-hidden" id="about-dialog">
 			<p id="about-logo"></p>
-			<p id="about-title">Transmission X</p>
-			<p id="about-blurb">A fast and easy BitTorrent client</p>
-			<p id="about-copyright">Copyright (c) The Transmission Project</p>
+			<p id="about-title">Webtorrent Web UI</p>
+			<p id="about-blurb">A simple yet complete web UI for Webtorrent</p>
+			<p id="about-copyright">Copyright (c) The Transmission Project, Feross Aboukhadijeh and WebTorrent, LLC.</p>
 		</div>
 
 		<div class="ui-helper-hidden" id="stats-dialog">
@@ -338,14 +338,15 @@
 			<ul class="ui-helper-hidden" id="footer_super_menu">
 				<li id="about-button">About</li>
 				<li>---</li>
-				<li id="homepage">Transmission Homepage</li>
+				<li id="wt-homepage">Webtorrent Homepage</li>
+				<li id="tr-homepage">Transmission Homepage</li>
 				<li id="tipjar">Transmission Tip Jar</li>
 				<li>---</li>
 				<li id="statistics">Statistics</li>
 				<!--
 				<li id="toggle_notifications">Notifcations</li>
 				-->
-				<li>---</li>
+				<!-- <li>---</li>
 				<li disabled="true">Total Download Rate
 					<ul id="footer_download_rate_menu">
 						<li radio-group="download-rate" id="unlimited_download_rate"><span class='ui-icon ui-icon-bullet'></span>Unlimited</li>
@@ -385,8 +386,8 @@
 						<li class='upload-speed'>500 kB/s</li>
 						<li class='upload-speed'>750 kB/s</li>
 					</ul>
-				</li>
-				<li>---</li>
+				</li> -->
+				<!-- <li>---</li> -->
 				<li>Sort Transfers By
 					<ul id="footer_sort_menu">
 						<li radio-group="sort-mode" id="sort_by_queue_order">Queue Order</li>

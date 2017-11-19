@@ -21,10 +21,11 @@ Webtorrent Web UI
   -p  sets the port to listen to      - default 9081
 ```
 
+Checkout the [docker folder](https://github.com/pldubouilh/webtorrent-webui/tree/master/docker) for an example docker image running with OpenVPN.
 
 Todo:
   - [x] Modernize UI: drag'n'drop torrents, paste magnetlinks...
-  - [ ] Rename things properly
+  - [x] Rename things properly
   - [x] Spin file server with downloaded files
   - [ ] Use sass, revert hardcoded CSS
   - [ ] Password protect (maybe?)
