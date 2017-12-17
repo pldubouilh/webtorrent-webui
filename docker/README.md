@@ -13,4 +13,4 @@ docker run -d --cap-add=NET_ADMIN --device=/dev/net/tun -p 127.0.0.1:9081:9081 -
 ```
 
 * The --cap-add and --device options are only needed for openvpn
-* The two mountpoints with -v are basically mountpoints from your filesystem
+* The two mountpoints with -v are basically mountpoints from your filesyste

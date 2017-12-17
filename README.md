@@ -1,7 +1,7 @@
 Webtorrent Web UI
 =============
 
-![screenshot](https://i.imgur.com/Dduiv0K.png)
+![screenshot](https://i.imgur.com/ZyW6Sp4.png)
 
 A simple-yet-complete web user interface for Webtorrent. Based on the [Transmission](https://transmissionbt.com/) web UI, and of course [Webtorrent](https://webtorrent.io) for the torrenting bit.
 
