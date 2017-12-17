@@ -774,8 +774,6 @@ Transmission.prototype = {
                 break;
 
             case 'about-button':
-                o = 'Transmission ' + this.serverVersion;
-                $('#about-dialog #about-title').html(o);
                 $('#about-dialog').dialog({
                     title: 'About',
                     show: 'fade',
@@ -783,7 +781,11 @@ Transmission.prototype = {
                 });
                 break;
 
-            case 'homepage':
+            case 'wt-homepage':
+                window.open('https://webtorrent.io/');
+                break;
+
+            case 'tr-homepage':
                 window.open('https://transmissionbt.com/');
                 break;
 

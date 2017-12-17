@@ -1,7 +1,7 @@
 Webtorrent Web UI
 =============
 
-![screenshot](https://i.imgur.com/Dduiv0K.png)
+![screenshot](https://i.imgur.com/ZyW6Sp4.png)
 
 A simple-yet-complete web user interface for Webtorrent. Based on the [Transmission](https://transmissionbt.com/) web UI, and of course [Webtorrent](https://webtorrent.io) for the torrenting bit.
 
@@ -21,10 +21,11 @@ Webtorrent Web UI
   -p  sets the port to listen to      - default 9081
 ```
 
+Checkout the [docker folder](https://github.com/pldubouilh/webtorrent-webui/tree/master/docker) for an example docker image running with OpenVPN.
 
 Todo:
   - [x] Modernize UI: drag'n'drop torrents, paste magnetlinks...
-  - [ ] Rename things properly
+  - [x] Rename things properly
   - [x] Spin file server with downloaded files
   - [ ] Use sass, revert hardcoded CSS
   - [ ] Password protect (maybe?)
