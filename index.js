@@ -5,10 +5,12 @@ const os = require('os')
 const path = require('path')
 const bodyParser = require('body-parser')
 const ecstatic = require('ecstatic')
-const parser = require('./lib/parser')
-
 const express = require('express')
 const app = express()
+
+const parser = require('./lib/parser')
+const HandlerWebtorrent = require('./lib/handlerWebtorrent')
+let wt = null
 
 const help = `Webtorrent Web UI
    -h  displays this message
@@ -56,12 +58,12 @@ function start () {
 
   var jsonParser = bodyParser.json()
   app.post('/rpc/', jsonParser, (req, res, next) => {
-    res.json(parser.parse(req.body))
+    res.json(parser(req.body, wt))
   })
 
   app.listen(parseInt(port), host, (err) => {
     if (err) die(err, 1)
-    parser.start(tFolder, dlFolder, verb)
+    wt = new HandlerWebtorrent(tFolder, dlFolder, verb)
     console.log(`Starting at http://${host || '127.0.0.1'}:${port}`)
   })
 }
