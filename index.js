@@ -28,8 +28,8 @@ function die (msg, code) {
 function start () {
   let tFolder = argv.t || (os.homedir() + '/.torrent_folder/')
   let dlFolder = argv.d || (os.homedir() + '/Downloads/')
-  const host = argv.l || '127.0.0.1'
-  const port = argv.p || 9081
+  const host = !argv.l ? ['127.0.0.1'] : typeof argv.l === 'string' ? [argv.l] : argv.l
+  const port = argv.p ? parseInt(argv.p) : 9081
   const verb = !!argv.v
 
   // Check input
@@ -48,6 +48,15 @@ function start () {
     } catch (e) { die("Can't create download folder", 1) }
   }
 
+  app.all('*', (req, res, next) => {
+    if (host.includes(req.hostname)) {
+      next()
+    } else {
+      res.writeHead(403, { 'Connection': 'close' })
+      res.end()
+    }
+  })
+
   app.get(/files/, ecstatic({
     root: dlFolder,
     baseDir: '/files',
@@ -61,10 +70,10 @@ function start () {
     res.json(parser(req.body, wt))
   })
 
-  app.listen(parseInt(port), host, (err) => {
+  app.listen(port, host, (err) => {
     if (err) die(err, 1)
     wt = new HandlerWebtorrent(tFolder, dlFolder, verb)
-    console.log(`Starting at http://${host || '127.0.0.1'}:${port}`)
+    console.log(`Starting at ${host.map(t => '\r\n  http://' + t + ':' + port)}`)
   })
 }
 
