@@ -37,6 +37,7 @@
     "clone-deep": "^1.0.0",
     "ecstatic": "^3.0.0",
     "express": "^4.16.2",
+    "fs-extra": "^5.0.0",
     "parse-torrent": "^5.8.3",
     "restify": "^5.0.1",
     "rimraf": "^2.6.1",
