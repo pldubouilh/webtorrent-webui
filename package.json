@@ -2,13 +2,13 @@
   "name": "webtorrent-webui",
   "version": "0.0.13",
   "description": "A transmission based web interface for webtorrent",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
-    "dev": "node index.js -v -p 9998",
+    "dev": "node app.js -v -p 9998",
     "watch": "node_modules/nodemon/bin/nodemon.js -i torrent_folder/state.json --exec 'npm run dev'",
-    "debug": "node --inspect-brk index.js -v -p 9998",
+    "debug": "node --inspect-brk app.js -v -p 9998",
     "watch-debug": "node_modules/nodemon/bin/nodemon.js -i torrent_folder/state.json --exec 'npm run debug'",
-    "lint": "standard index.js handlerWebtorrent.js parser.js translator.js types.js"
+    "lint": "standard app.js handlerWebtorrent.js parser.js translator.js types.js"
   },
   "repository": {
     "type": "git",
@@ -26,7 +26,7 @@
     "url": "https://github.com/pldubouilh/webtorrent-webui/issues"
   },
   "bin": {
-    "webtorrent-webui": "./index.js"
+    "webtorrent-webui": "./app.js"
   },
   "engines": {
     "node": ">=8"

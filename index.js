@@ -1,18 +1,9 @@
-#!/usr/bin/env node
 const argv = require('yargs').argv
 const fs = require('fs')
 const os = require('os')
 const path = require('path')
-const bodyParser = require('body-parser')
-const ecstatic = require('ecstatic')
-const express = require('express')
-const app = express()
 
-const parser = require('./lib/parser')
-const HandlerWebtorrent = require('./lib/handlerWebtorrent')
-let wt = null
-
-const help = `Webtorrent Web UI
+let help = `Webtorrent Web UI
    -h  displays this message
    -t  sets the torrent folder         - default ~/.torrent_folder
    -d  sets the download folder        - default ~/Downloads
@@ -25,7 +16,13 @@ function die (msg, code) {
   process.exit(code)
 }
 
-function start () {
+module.exports = function start (hybrid) {
+  if (hybrid) {
+    help = help + '\r\nThis hybrid version runs webtorrent-hybrid'
+  }
+
+  if (argv.h || argv.help) { return die(help, 0) }
+
   let tFolder = argv.t || (os.homedir() + '/.torrent_folder/')
   let dlFolder = argv.d || (os.homedir() + '/Downloads/')
   const host = !argv.l ? ['127.0.0.1'] : typeof argv.l === 'string' ? [argv.l] : argv.l
@@ -48,6 +45,14 @@ function start () {
     } catch (e) { die("Can't create download folder", 1) }
   }
 
+  const bodyParser = require('body-parser')
+  const ecstatic = require('ecstatic')
+  const express = require('express')
+  const app = express()
+  const parser = require('./lib/parser')
+  const HandlerWebtorrent = require('./lib/handlerWebtorrent')
+  let handler
+
   app.all('*', (req, res, next) => {
     if (host.includes(req.hostname)) {
       next()
@@ -67,18 +72,13 @@ function start () {
 
   var jsonParser = bodyParser.json()
   app.post('/rpc/', jsonParser, (req, res, next) => {
-    res.json(parser(req.body, wt))
+    res.json(parser(req.body, handler))
   })
 
   app.listen(port, host, (err) => {
     if (err) die(err, 1)
-    wt = new HandlerWebtorrent(tFolder, dlFolder, verb)
-    console.log(`Starting at ${host.map(t => '\r\n  http://' + t + ':' + port)}`)
-  })
-}
 
-if (argv.h || argv.help) {
-  die(help, 0)
-} else {
-  start()
+    console.log(`Starting at ${host.map(t => '\r\n  http://' + t + ':' + port)}`)
+    handler = new HandlerWebtorrent(tFolder, dlFolder, verb, hybrid)
+  })
 }
