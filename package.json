@@ -1,8 +1,8 @@
 {
   "name": "webtorrent-webui",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "description": "A transmission based web interface for webtorrent",
-  "main": "app.js",
+  "main": "index.js",
   "scripts": {
     "dev": "node app.js -v -p 9998",
     "watch": "node_modules/nodemon/bin/nodemon.js -i torrent_folder/state.json --exec 'npm run dev'",
