@@ -257,7 +257,7 @@ ul.torrent_list {
       text-overflow: ellipsis;
       white-space: nowrap;
       color: #222;
-      margin-top: 2px;
+      margin-top: 10px;
       margin-bottom: 2px; }
       ul.torrent_list li.torrent div.torrent_name.compact {
         font-size: 1.0em;

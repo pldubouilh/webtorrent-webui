@@ -4,11 +4,15 @@
   "description": "A transmission based web interface for webtorrent",
   "main": "index.js",
   "scripts": {
+    "startTest": "node app.js -p 9999 -t tests/fixture/tf -d tests/fixture/data &",
+    "exexTest": "node tests/test.js",
+    "stopTest": "kill `lsof -ti tcp:9999`",
+    "test": "npm run startTest && sleep 5 && npm run exexTest && npm run stopTest",
     "dev": "node app.js -v -p 9998",
     "watch": "node_modules/nodemon/bin/nodemon.js -i torrent_folder/state.json --exec 'npm run dev'",
     "debug": "node --inspect-brk app.js -v -p 9998",
     "watch-debug": "node_modules/nodemon/bin/nodemon.js -i torrent_folder/state.json --exec 'npm run debug'",
-    "lint": "standard app.js handlerWebtorrent.js parser.js translator.js types.js"
+    "lint": "standard app.js index.js handlerWebtorrent.js parser.js translator.js types.js"
   },
   "repository": {
     "type": "git",
@@ -45,6 +49,10 @@
   },
   "devDependencies": {
     "nodemon": "^1.11.0",
-    "standard": "^10.0.3"
+    "pixelmatch": "^4.0.2",
+    "pngjs": "^3.3.1",
+    "puppeteer": "^1.0.0",
+    "standard": "^10.0.3",
+    "tape": "^4.8.0"
   }
 }
