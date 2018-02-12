@@ -1,3 +1,6 @@
+const WebTorrent = require('webtorrent')
+const Tracker = require('bittorrent-tracker').Server
+const fixtures = require('webtorrent-fixtures')
 const puppeteer = require('puppeteer')
 const fs = require('fs')
 const PNG = require('pngjs').PNG
@@ -7,14 +10,36 @@ const request = require('request-promise-native')
 
 const masterpieces = './tests/masterpieces/'
 const testDir = './tests/testPics/'
+const hostnameTracker = '127.0.0.1'
+const portTracker = 8008
 let browser
 
-puppeteer.launch({ args: ['--no-sandbox'] }).then(_browser => {
-  browser = _browser
+const doTest = async () => {
+  browser = await puppeteer.launch({ args: ['--no-sandbox'] })
+
   test('default page downloaded alice', alice)
   test('test pausing', pause)
-  test.onFinish(() => _browser.close())
-})
+  test('test downloading', dl)
+
+  test.onFinish(() => browser.close())
+}
+
+doTest()
+
+function spawnTracker () {
+  return new Promise((resolve, reject) => {
+    const tracker = new Tracker({ udp: false, ws: false })
+    tracker.listen(portTracker, hostnameTracker, () => resolve(tracker))
+  })
+}
+
+function newClientSeedLeaves () {
+  return new Promise((resolve, reject) => {
+    const announce = [`http://${hostnameTracker}:${portTracker}/announce`]
+    const client = new WebTorrent()
+    client.seed(fixtures.leaves.contentPath, { announce }, t => resolve({ client, magnet: t.magnetURI }))
+  })
+}
 
 function compareScreenshots (fileName) {
   return new Promise((resolve, reject) => {
@@ -34,30 +59,37 @@ function compareScreenshots (fileName) {
   })
 }
 
-async function testPage (url, file, t) {
+async function testPageScreenshot (url, file, delay, t) {
   const page = await browser.newPage()
   page.setViewport({ width: 800, height: 600 })
 
   await page.goto(url)
-  await page.waitFor(2000)
+  await page.waitFor(delay)
   await page.screenshot({ path: testDir + file })
 
   const cmp = await compareScreenshots(file)
 
+  t.plan(3)
   t.deepEqual(cmp.masterpiece.width, cmp.img.width, 'image widths are the same')
   t.deepEqual(cmp.masterpiece.height, cmp.img.height, 'image heights are the same')
   t.true(cmp.numDiffPixels < 100, 'image is not too different from masterpiece')
+  t.end()
 }
 
 async function alice (t) {
-  t.plan(3)
-  await testPage('http://127.0.0.1:9999', 'alice.png', t)
-  t.end()
+  await testPageScreenshot('http://127.0.0.1:9999', 'alice.png', 1000, t)
 }
 
 async function pause (t) {
-  t.plan(3)
   await request.post({ url: 'http://127.0.0.1:9999/rpc', json: { method: 'torrent-stop', arguments: { 'ids': ['722fe65b2aa26d14f35b4ad627d20236e481d924'] } } })
-  await testPage('http://127.0.0.1:9999', 'pause.png', t)
-  t.end()
+  await testPageScreenshot('http://127.0.0.1:9999', 'pause.png', 2000, t)
+}
+
+async function dl (t) {
+  const tracker = await spawnTracker()
+  const { client, magnet } = await newClientSeedLeaves()
+  await request.post({ url: 'http://127.0.0.1:9999/rpc', json: { method: 'torrent-add', arguments: { paused: false, 'download-dir': '', filename: magnet } } })
+  await testPageScreenshot('http://127.0.0.1:9999', 'leaves.png', 8000, t)
+  client.destroy()
+  tracker.close()
 }
