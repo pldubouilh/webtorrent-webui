@@ -18,8 +18,10 @@ const doTest = async () => {
   browser = await puppeteer.launch({ args: ['--no-sandbox'] })
 
   test('default page downloaded alice', alice)
+  test('expanded view alice torrent', aliceDetails)
   test('test pausing', pause)
   test('test downloading', dl)
+  test('test fileserver view', fileserver)
 
   test.onFinish(() => browser.close())
 }
@@ -59,12 +61,17 @@ function compareScreenshots (fileName) {
   })
 }
 
-async function testPageScreenshot (url, file, delay, t) {
+async function testPageScreenshot (url, file, delay, t, x, y) {
   const page = await browser.newPage()
   page.setViewport({ width: 800, height: 600 })
 
   await page.goto(url)
   await page.waitFor(delay)
+
+  if (x && y) {
+    await page.mouse.click(x, y, { clickCount: 2 })
+  }
+
   await page.screenshot({ path: testDir + file })
 
   const cmp = await compareScreenshots(file)
@@ -80,6 +87,10 @@ async function alice (t) {
   await testPageScreenshot('http://127.0.0.1:9999', 'alice.png', 1000, t)
 }
 
+async function aliceDetails (t) {
+  await testPageScreenshot('http://127.0.0.1:9999', 'aliceDetails.png', 1000, t, 300, 100)
+}
+
 async function pause (t) {
   await request.post({ url: 'http://127.0.0.1:9999/rpc', json: { method: 'torrent-stop', arguments: { 'ids': ['722fe65b2aa26d14f35b4ad627d20236e481d924'] } } })
   await testPageScreenshot('http://127.0.0.1:9999', 'pause.png', 2000, t)
@@ -92,4 +103,8 @@ async function dl (t) {
   await testPageScreenshot('http://127.0.0.1:9999', 'leaves.png', 8000, t)
   client.destroy()
   tracker.close()
+}
+
+async function fileserver (t) {
+  await testPageScreenshot('http://127.0.0.1:9999/files', 'fileserver.png', 1000, t)
 }
