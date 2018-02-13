@@ -70,7 +70,7 @@ async function testPageScreenshot (path, file, delay, t, x, y) {
   await page.waitFor(delay)
 
   if (x && y) {
-    await page.mouse.click(x, y, { clickCount: 2 })
+    await page.mouse.click(x, y, { clickCount: 2, delay: 100 })
   }
 
   await page.screenshot({ path: testDir + file })

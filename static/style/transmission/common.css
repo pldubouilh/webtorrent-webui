@@ -9,7 +9,7 @@ html {
   height: 100%; }
 
 body {
-  font: 62.5% "lucida grande", Tahoma, Verdana, Arial, Helvetica, sans-serif;
+  font: 62.5% Arimo;
   /* Resets 1em to 10px */
   color: #222;
   /* !important; */
@@ -21,6 +21,20 @@ body {
     border: none; }
   body a {
     outline: 0; }
+
+@font-face {
+  font-family: 'Arimo';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Arimo Regular'), local('Arimo-Regular'), url(arimo.ttf) format('truetype');
+}
+
+@font-face {
+  font-family: 'Arimo';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Arimo Bold'), local('Arimo-Bold'), url(arimo-bold.ttf) format('truetype');
+}
 
 /***
 ****
@@ -214,7 +228,7 @@ ul.torrent_list {
    */ }
   ul.torrent_list li.torrent {
     border-bottom: 1px solid #ccc;
-    padding: 0px 30px 10px 14px;
+    padding: 10px 30px 10px 14px;
     color: #666;
     background-color: white; }
     ul.torrent_list li.torrent.compact {
@@ -257,7 +271,7 @@ ul.torrent_list {
       text-overflow: ellipsis;
       white-space: nowrap;
       color: #222;
-      margin-top: 10px;
+      margin-top: 1px;
       margin-bottom: 2px; }
       ul.torrent_list li.torrent div.torrent_name.compact {
         font-size: 1.0em;
