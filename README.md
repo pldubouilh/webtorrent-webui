@@ -25,6 +25,8 @@ Webtorrent Web UI
 
 Checkout the [docker folder](https://github.com/pldubouilh/webtorrent-webui/tree/master/docker) for an example docker image running with OpenVPN.
 
+A version of webtorrent-webui fueled by webtorrent-hybrid is also available ! Checkout [webtorrent-webui-hybrid](https://github.com/pldubouilh/webtorrent-webui-hybrid).
+
 ### Todo:
   - [x] Modernize UI: drag'n'drop torrents, paste magnetlinks...
   - [x] Rename things properly

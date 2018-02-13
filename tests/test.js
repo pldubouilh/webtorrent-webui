@@ -10,6 +10,7 @@ const request = require('request-promise-native')
 
 const masterpieces = './tests/masterpieces/'
 const testDir = './tests/testPics/'
+const endpoint = 'http://127.0.0.1:9999'
 const hostnameTracker = '127.0.0.1'
 const portTracker = 8008
 let browser
@@ -61,11 +62,11 @@ function compareScreenshots (fileName) {
   })
 }
 
-async function testPageScreenshot (url, file, delay, t, x, y) {
+async function testPageScreenshot (path, file, delay, t, x, y) {
   const page = await browser.newPage()
   page.setViewport({ width: 800, height: 600 })
 
-  await page.goto(url)
+  await page.goto(endpoint + path)
   await page.waitFor(delay)
 
   if (x && y) {
@@ -84,27 +85,27 @@ async function testPageScreenshot (url, file, delay, t, x, y) {
 }
 
 async function alice (t) {
-  await testPageScreenshot('http://127.0.0.1:9999', 'alice.png', 1000, t)
+  await testPageScreenshot('/', 'alice.png', 1000, t)
 }
 
 async function aliceDetails (t) {
-  await testPageScreenshot('http://127.0.0.1:9999', 'aliceDetails.png', 1000, t, 300, 100)
+  await testPageScreenshot('/', 'aliceDetails.png', 1000, t, 300, 100)
 }
 
 async function pause (t) {
-  await request.post({ url: 'http://127.0.0.1:9999/rpc', json: { method: 'torrent-stop', arguments: { 'ids': ['722fe65b2aa26d14f35b4ad627d20236e481d924'] } } })
-  await testPageScreenshot('http://127.0.0.1:9999', 'pause.png', 2000, t)
+  await request.post({ url: endpoint + '/rpc', json: { method: 'torrent-stop', arguments: { 'ids': ['722fe65b2aa26d14f35b4ad627d20236e481d924'] } } })
+  await testPageScreenshot('/', 'pause.png', 2000, t)
 }
 
 async function dl (t) {
   const tracker = await spawnTracker()
   const { client, magnet } = await newClientSeedLeaves()
-  await request.post({ url: 'http://127.0.0.1:9999/rpc', json: { method: 'torrent-add', arguments: { paused: false, 'download-dir': '', filename: magnet } } })
-  await testPageScreenshot('http://127.0.0.1:9999', 'leaves.png', 8000, t)
+  await request.post({ url: endpoint + '/rpc', json: { method: 'torrent-add', arguments: { paused: false, 'download-dir': '', filename: magnet } } })
+  await testPageScreenshot('/', 'leaves.png', 8000, t)
   client.destroy()
   tracker.close()
 }
 
 async function fileserver (t) {
-  await testPageScreenshot('http://127.0.0.1:9999/files', 'fileserver.png', 1000, t)
+  await testPageScreenshot('/files', 'fileserver.png', 1000, t)
 }
