@@ -81,4 +81,8 @@ module.exports = function start (hybrid) {
     console.log(`Starting at ${host.map(t => '\r\n  http://' + t + ':' + port)}`)
     handler = new HandlerWebtorrent(tFolder, dlFolder, verb, hybrid)
   })
+
+  process.on('SIGTERM', function () {
+    handler.destroy(() => process.exit(0))
+  })
 }
