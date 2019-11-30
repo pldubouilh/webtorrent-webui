@@ -5,11 +5,13 @@ const path = require('path')
 
 let help = `Webtorrent Web UI
    -h  displays this message
-   -t  sets the torrent folder         - default ~/.torrent_folder
-   -d  sets the download folder        - default ~/Downloads
-   -v  gives a console status msg/sec  - default disabled
-   -l  sets the host to listen to      - default 127.0.0.1
-   -p  sets the port to listen to      - default 9081`
+   -t  sets the torrent folder          - default ~/.torrent_folder
+   -d  sets the download folder         - default ~/Downloads
+   -v  gives a console status msg/sec   - default disabled
+   -l  sets the host to listen to       - default 127.0.0.1
+   -p  sets the port to listen to       - default 9081
+   -a  sets the DHT listen UDP port     - default 7000
+   -o  sets the Torrent listen TCP port - default 7000`
 
 function die (msg, code) {
   console.log(msg)
@@ -28,6 +30,8 @@ module.exports = function start (hybrid) {
   const host = !argv.l ? ['127.0.0.1'] : typeof argv.l === 'string' ? [argv.l] : argv.l
   const port = argv.p ? parseInt(argv.p) : 9081
   const verb = !!argv.v
+  const dhtPort = argv.a ? parseInt(argv.a) : 7000
+  const torrentPort = argv.o ? parseInt(argv.o) : 7000
 
   // Check input
   tFolder = tFolder.endsWith('/') ? tFolder : tFolder + '/'
@@ -79,7 +83,7 @@ module.exports = function start (hybrid) {
     if (err) die(err, 1)
 
     console.log(`Starting at ${host.map(t => '\r\n  http://' + t + ':' + port)}`)
-    handler = new HandlerWebtorrent(tFolder, dlFolder, verb, hybrid)
+    handler = new HandlerWebtorrent(tFolder, dlFolder, verb, hybrid, dhtPort, torrentPort)
   })
 
   process.on('SIGTERM', function () {
