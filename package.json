@@ -44,7 +44,7 @@
     "parse-torrent": "^5.8.3",
     "restify": "^5.0.1",
     "rimraf": "^2.6.1",
-    "webtorrent": "^0.98.19",
+    "webtorrent": "^0.107.17",
     "yargs": "^8.0.2"
   },
   "devDependencies": {
