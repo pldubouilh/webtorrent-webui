@@ -16,11 +16,13 @@ $ webtorrent-webui -h
 
 Webtorrent Web UI
   -h  displays this message
-  -t  sets the torrent folder         - default ~/.torrent_folder
-  -d  sets the download folder        - default ~/Downloads
-  -v  gives a console status msg/sec  - default disabled
-  -l  sets the host to listen to      - default 127.0.0.1
-  -p  sets the port to listen to      - default 9081
+  -t  sets the torrent folder          - default ~/.torrent_folder
+  -d  sets the download folder         - default ~/Downloads
+  -v  gives a console status msg/sec   - default disabled
+  -l  sets the host to listen to       - default 127.0.0.1
+  -p  sets the port to listen to       - default 9081
+  -a  sets the DHT listen UDP port     - default 7000
+  -o  sets the Torrent listen TCP port - default 7000
 ```
 
 Checkout the [docker folder](https://github.com/pldubouilh/webtorrent-webui/tree/master/docker) for an example docker image running with OpenVPN.
